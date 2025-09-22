@@ -1,0 +1,29 @@
+project rules:
+---
+description: Next.js landing page project rules. Maintain consistent data structure from database while allowing complete design template changes. Focus on data integrity and structure consistency.
+globs:
+  - "**/*.{js,jsx,ts,tsx}"
+  - "**/*.{css,scss,module.css}"
+  - "**/api/**/*"
+  - "**/components/**/*"
+  - "**/pages/**/*"
+  - "**/app/**/*"
+alwaysApply: true
+---
+## Data Structure Rules
+1. **Preserve Database Schema**: Never modify the structure, field names, or data types coming from the database
+2. **Consistent Data Flow**: Maintain the same data fetching patterns and prop passing structure
+3. **API Contract**: Keep all API endpoints and response formats unchanged
+4. **Component Props**: Preserve existing prop interfaces when redesigning components
+5. **Data Transformation**: If data transformation is needed, do it in the same location and maintain the same output structure
+## Design Freedom Rules
+6. **Template Redesign**: Complete visual redesign is allowed and encouraged
+7. **Component Structure**: Can restructure JSX and component hierarchy for design purposes
+8. **Styling**: Full freedom to change CSS, styling approaches, and visual elements
+9. **Layout Changes**: Can modify layouts, positioning, and visual arrangement
+10. **UI Components**: Can replace or redesign all UI components while maintaining data integration
+## Code Consistency Rules
+11. **TypeScript Types**: Maintain existing TypeScript interfaces for data structures
+12. **Error Handling**: Keep existing error handling patterns for data operations
+13. **Loading States**: Preserve loading state logic while redesigning loading UI
+14. **Data Validation**: Maintain any existing data validation logic

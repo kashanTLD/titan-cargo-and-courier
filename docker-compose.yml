@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Next.js Application - Production Optimized
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    image: template001:latest
+    container_name: template001-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      # Set your external database URL in .env.local
+      - NEXT_PUBLIC_TEMPLATE_ID=premium-corporate-template
+      - NEXT_PUBLIC_ID=c0f6f1c7-82d2-4410-92ab-26d6071d5c3c
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+    volumes:
+      - ./.env.local:/app/.env.local:ro
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
