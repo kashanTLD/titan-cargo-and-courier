@@ -38,7 +38,12 @@ export default function ServiceAreasSection({
   }
 
   return (
-    <section className="py-16 sm:py-20 md:py-24 lg:py-32 relative overflow-hidden bg-pink-50">
+    <section 
+      className="py-16 sm:py-20 md:py-24 lg:py-32 relative overflow-hidden"
+      style={{
+        backgroundColor: themeData?.secondaryColor ? `${themeData.secondaryColor}10` : '#FDF4F5'
+      }}
+    >
       {/* Background subtle elements */}
       <div className="absolute inset-0 opacity-5">
         <div 
@@ -65,7 +70,7 @@ export default function ServiceAreasSection({
                 titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
               style={{ 
-                color: '#8B4513',
+                color: themeData?.primaryColor || '#8B4513',
                 fontFamily: 'Georgia, serif'
               }}
             >
@@ -131,7 +136,7 @@ export default function ServiceAreasSection({
                 <span 
                   className="text-lg md:text-xl font-medium whitespace-nowrap"
                   style={{ 
-                    color: '#8B4513',
+                    color: themeData?.primaryColor || '#8B4513',
                     fontFamily: 'Georgia, serif'
                   }}
                 >

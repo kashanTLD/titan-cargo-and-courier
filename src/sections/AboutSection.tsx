@@ -310,7 +310,12 @@ export default function AboutSection({
 
         <div className="relative z-10 min-h-screen flex items-center">
           <div className="container mx-auto px-6 lg:px-8">
-            {/* Header */}
+            
+
+            <div className="grid lg:grid-cols-2 gap-20 items-start">
+              
+              <div>
+                {/* Header */}
             <div className="text-center mb-20 space-y-8">
               {/* Floating Icon */}
               <div
@@ -386,10 +391,6 @@ export default function AboutSection({
                 {description}
               </p>
             </div>
-
-            <div className="grid lg:grid-cols-2 gap-20 items-center">
-              {/* Features */}
-              <div>
                 {features && features.length > 0 && (
                   <div ref={featuresRef} className="space-y-6 mb-12">
                     {features.map((feature, index) => (
@@ -422,7 +423,7 @@ export default function AboutSection({
                               <p
                                 className="text-lg font-medium leading-relaxed"
                                 style={{
-                                  color: primaryColor,
+                                  color: secondaryColor,
                                   letterSpacing: "0.01em",
                                 }}
                               >

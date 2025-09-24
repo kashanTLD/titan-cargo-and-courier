@@ -95,7 +95,8 @@ export default function FooterSection({
     <footer
       ref={footerRef}
       id="contact"
-      className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-gray-900"
+      className="py-16 sm:py-20 md:py-24 relative overflow-hidden"
+      style={{ backgroundColor: themeData?.secondaryColor || '#1f2937' }}
     >
       {/* Subtle background gradients */}
       <div className="absolute inset-0 opacity-10">
@@ -205,9 +206,10 @@ export default function FooterSection({
           {/* Quick Links */}
           <div>
             <h4 
-              className={`text-lg font-semibold text-white mb-6 transition-all duration-1000 delay-400 ${
+              className={`text-lg font-semibold mb-6 transition-all duration-1000 delay-400 ${
                 footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
+              style={{ color: themeData?.primaryColor || '#ffffff' }}
             >
               Quick Links
             </h4>
@@ -226,8 +228,12 @@ export default function FooterSection({
                 <Link 
                   key={index}
                   href={link.href}
-                  className="block text-gray-300 hover:text-white transition-colors duration-300 hover:translate-x-1"
-                  style={{ transitionDelay: `${index * 0.1}s` }}
+                  className="block transition-colors duration-300 hover:translate-x-1"
+                  style={{ 
+                    transitionDelay: `${index * 0.1}s`,
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    ':hover': { color: themeData?.primaryColor || '#ffffff' }
+                  }}
                 >
                   {link.label}
                 </Link>
@@ -238,9 +244,10 @@ export default function FooterSection({
           {/* Contact Info */}
           <div>
             <h4 
-              className={`text-lg font-semibold text-white mb-6 transition-all duration-1000 delay-600 ${
+              className={`text-lg font-semibold mb-6 transition-all duration-1000 delay-600 ${
                 footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
+              style={{ color: themeData?.primaryColor || '#ffffff' }}
             >
               Contact Info
             </h4>
@@ -259,7 +266,7 @@ export default function FooterSection({
                       <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                     </svg>
                   </div>
-                  <a href={`tel:${businessData.phone}`} className="text-gray-300 hover:text-white transition-colors">
+                  <a href={`tel:${businessData.phone}`} className="hover:text-white transition-colors" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                     {businessData.phone}
                   </a>
                 </div>
@@ -275,7 +282,7 @@ export default function FooterSection({
                       <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                     </svg>
                   </div>
-                  <a href={`mailto:${businessData.email}`} className="text-gray-300 hover:text-white transition-colors">
+                  <a href={`mailto:${businessData.email}`} className="hover:text-white transition-colors" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                     {businessData.email}
                   </a>
                 </div>
@@ -291,7 +298,7 @@ export default function FooterSection({
                       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                     </svg>
                   </div>
-                  <div className="text-gray-300">
+                  <div className="text-gray-300" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                     <div>{businessData.address.street}</div>
                     <div>{businessData.address.city}, {businessData.address.state} {businessData.address.zipCode}</div>
                   </div>
@@ -301,39 +308,6 @@ export default function FooterSection({
           </div>
         </div>
 
-        {/* Service Areas (if available) */}
-        {businessData?.serviceAreas && businessData.serviceAreas.length > 0 && (
-          <div 
-            className={`mb-12 transition-all duration-1000 delay-800 ${
-              footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            <div className="text-center mb-8">
-              <h4 className="text-lg font-semibold text-white mb-4">Service Areas</h4>
-              <div 
-                className="h-px mx-auto w-16"
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${themeData?.primaryColor}, transparent)`
-                }}
-              />
-            </div>
-            <div 
-              ref={serviceAreasRef}
-              className="flex flex-wrap justify-center gap-6"
-            >
-              {businessData.serviceAreas.slice(0, 8).map((area, index) => (
-                <div
-                  key={index}
-                  className="text-gray-300 hover:text-white transition-colors duration-300 text-sm"
-                  style={{ transitionDelay: `${index * 0.1}s` }}
-                >
-                  {area.city}, {area.region}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Copyright */}
         <div className="border-t border-gray-700 pt-8">
           <div 
@@ -341,7 +315,7 @@ export default function FooterSection({
               footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
           >
-            <p className="text-gray-400 text-sm">
+            <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
               {copyright || `© ${new Date().getFullYear()} ${businessName}. All rights reserved.`}
             </p>
           </div>

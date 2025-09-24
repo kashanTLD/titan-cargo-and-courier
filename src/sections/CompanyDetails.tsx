@@ -100,7 +100,6 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
       font-weight: 400;
       letter-spacing: 0.06em;
       color: #666;
-      text-transform: uppercase;
     }
 
     /* Card look - modern with subtle 3D hover emphasis */

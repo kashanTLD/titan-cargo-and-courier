@@ -193,10 +193,6 @@ export default function HeroSection({
       color: white;
     }
 
-    .organic-button .button-text {
-      color: var(--theme-primary-color);
-    }
-
     .geometric-3d {
       transform-style: preserve-3d;
       animation: geometric-spin 25s linear infinite;
@@ -421,7 +417,7 @@ export default function HeroSection({
                   }`}
                 >
                   <a href={ctaButton.href} className="organic-button group">
-                    <span className="button-text">{ctaButton.label}</span>
+                    <span className="text-black group-hover:text-white">{ctaButton.label}</span>
                     <svg 
                       className="w-5 h-5 transition-transform duration-500 group-hover:translate-x-2" 
                       fill="none" 
@@ -468,7 +464,7 @@ export default function HeroSection({
                         background: `linear-gradient(135deg, ${themeData?.primaryColor}15, ${themeData?.secondaryColor}15)`
                       }}
                     >
-                      ✨
+                      
                     </div>
                   )}
                 </div>
@@ -510,7 +506,7 @@ export default function HeroSection({
                         background: `linear-gradient(135deg, ${themeData?.secondaryColor}20, ${themeData?.primaryColor}10)`
                       }}
                     >
-                      💎
+                      
                     </div>
                   )}
                 </div>
