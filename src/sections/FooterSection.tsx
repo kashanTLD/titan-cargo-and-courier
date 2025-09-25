@@ -36,7 +36,6 @@ interface BusinessData {
 interface FooterSectionProps {
   businessName: string;
   businessDescription?: string;
-  logoImage?: string;
   businessData?: BusinessData;
   themeData?: ThemeData;
   copyright?: string;
@@ -45,7 +44,6 @@ interface FooterSectionProps {
 export default function FooterSection({
   businessName,
   businessDescription,
-  logoImage,
   businessData,
   themeData,
   copyright,
@@ -120,29 +118,30 @@ export default function FooterSection({
           
           {/* Company Info */}
           <div className="lg:col-span-2">
-            {logoImage && (
+            
               <div 
-                className={`mb-6 transition-all duration-1000 ${
+                className={`flex items-center gap-3 mb-6 transition-all duration-1000 ${
                   footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
                 <Image
-                  src={logoImage}
+                  src={'/logo.png'}
                   alt={`${businessName} logo`}
-                  width={200}
-                  height={64}
+                  width={100}
+                  height={100}
                   className="h-12 w-auto hover:scale-105 transition-transform duration-300"
                 />
-              </div>
-            )}
-            
-            <h3 
-              className={`text-2xl font-bold text-white mb-4 transition-all duration-1000 delay-200 ${
+
+<h3 
+              className={`text-2xl font-bold text-white transition-all duration-1000 delay-200 ${
                 footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
             >
               {businessName}
             </h3>
+              </div>
+            
+          
             
             {businessDescription && (
               <p 
@@ -231,8 +230,7 @@ export default function FooterSection({
                   className="block transition-colors duration-300 hover:translate-x-1"
                   style={{ 
                     transitionDelay: `${index * 0.1}s`,
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    ':hover': { color: themeData?.primaryColor || '#ffffff' }
+                    color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
                   {link.label}

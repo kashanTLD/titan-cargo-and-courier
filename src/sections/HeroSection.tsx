@@ -263,7 +263,7 @@ export default function HeroSection({
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <section className="relative overflow-hidden min-h-screen bg-white">
+      <section className="relative md:overflow-hidden min-h-screen bg-white">
         
         {/* Royal Background with Parallax */}
         <div className="absolute inset-0 split-content">

@@ -123,10 +123,6 @@ export default async function Home() {
       <div className="animate-fade-in-up">
         <Navbar
           businessName={landingPageData.businessName}
-          logoImage={
-            landingPageData.images?.find((img) => img.slotName === "logo-image")
-              ?.imageUrl
-          }
           themeData={landingPageData.themeData}
           phoneNumber={landingPageData.businessData?.phone}
         />
@@ -266,11 +262,6 @@ export default async function Home() {
             businessDescription={
               landingPageData.content?.about?.description ||
               "Professional services you can trust. We're here to help with all your business needs."
-            }
-            logoImage={
-              landingPageData.images?.find(
-                (img) => img.slotName === "logo-image"
-              )?.imageUrl
             }
             businessData={landingPageData.businessData}
             themeData={landingPageData.themeData}

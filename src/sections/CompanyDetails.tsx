@@ -95,13 +95,6 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
       font-family: 'serif', Georgia, 'Times New Roman', serif;
     }
 
-    .royal-subtitle {
-      font-size: clamp(1rem, 2vw, 1.15rem);
-      font-weight: 400;
-      letter-spacing: 0.06em;
-      color: #666;
-    }
-
     /* Card look - modern with subtle 3D hover emphasis */
     .category-card {
       background: #ffffff;
@@ -214,7 +207,7 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
             </div>
             {data.description && (
               <p 
-                className={`royal-subtitle max-w-2xl mx-auto transition-all duration-1200 delay-300 ${
+                className={`max-w-2xl mx-auto text-gray-600 text-base md:text-lg leading-relaxed tracking-wide normal-case transition-all duration-1200 delay-300 ${
                   headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
@@ -223,11 +216,9 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
             )}
           </div>
 
-         
           {/* Card grid (large devices) with hover emphasis */}
           <div className="hidden lg:block mt-6">
-            <div className="cards-3d">
-              <div className="cards-grid">
+            <div className="cards-grid">
               {data.sections.slice(0, 3).map((section, i) => (
                 <div
                   key={`preview-${i}`}
@@ -245,11 +236,14 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
                 >
                   <div className="card-media">
                     <div className="card-media-inner">
-                      {(() => { const img = getImageForSection(i); return img?.imageUrl ? (
-                        <Image src={img.imageUrl} alt={section.heading} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover"/>
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-5xl">🧊</div>
-                      ); })()}
+                      {(() => { 
+                        const img = getImageForSection(i); 
+                        return img?.imageUrl ? (
+                          <Image src={img.imageUrl} alt={section.heading} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover"/>
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-5xl">🧊</div>
+                        ); 
+                      })()}
                     </div>
                   </div>
                   <div className="card-body text-center space-y-3">
@@ -259,7 +253,6 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
                   </div>
                 </div>
               ))}
-              </div>
             </div>
           </div>
         </div>

@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 
 interface NavbarProps {
   businessName?: string;
-  logoImage?: string;
   themeData?: {
     primaryColor: string;
     secondaryColor: string;
@@ -16,7 +15,6 @@ interface NavbarProps {
 
 export default function Navbar({
   businessName = "Business",
-  logoImage,
   themeData,
   phoneNumber,
 }: NavbarProps) {
@@ -74,7 +72,7 @@ export default function Navbar({
       <nav className={`minimal-navbar transition-all duration-300 ${
         isScrolled ? 'minimal-navbar-scrolled' : ''
       } ${!isVisible ? '-translate-y-full' : 'translate-y-0'}`} style={{ 
-        background: `linear-gradient(135deg, ${themeData?.primaryColor}CC 0%, ${themeData?.secondaryColor}CC 100%)`,
+        background: `linear-gradient(135deg, ${themeData?.secondaryColor}CC 0%, ${themeData?.primaryColor}CC 80%, ${themeData?.secondaryColor}CC 100%)`,
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
         boxShadow: `0 4px 20px ${themeData?.primaryColor}40`
@@ -83,25 +81,12 @@ export default function Navbar({
           {/* Left Logo */}
           <div className="minimal-logo-container">
             <Link href="/" className="minimal-logo-link">
-              {logoImage ? (
-                <div className="flex items-center gap-3">
-                  <Image
-                    src={logoImage}
-                    alt={`${businessName} Logo`}
-                    width={40}
-                    height={40}
-                    className="minimal-logo-image"
-                    priority
-                  />
-                  <h1 className="minimal-logo-text text-white">
-                    {businessName}
-                  </h1>
-                </div>
-              ) : (
+            <Image alt="logo" src={'/logo.png' }  width={70} height={70} />
+             
                 <h1 className="minimal-logo-text text-white">
                   {businessName}
                 </h1>
-              )}
+              
             </Link>
           </div>
 
@@ -166,22 +151,7 @@ export default function Navbar({
             {/* Mobile Logo */}
             <div className="luxury-mobile-logo">
               <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center gap-4">
-                {logoImage && (
-                  <div 
-                    className="luxury-mobile-logo-frame"
-                    style={{
-                      borderColor: `${themeData?.primaryColor}40`
-                    }}
-                  >
-                    <Image
-                      src={logoImage}
-                      alt={`${businessName} Logo`}
-                      width={60}
-                      height={60}
-                      className="luxury-mobile-logo-image"
-                    />
-                  </div>
-                )}
+                <Image alt="logo" src={'/logo.png' }  width={40} height={40} />
                 <h1 className="luxury-mobile-logo-text">
                   {businessName}
                 </h1>
