@@ -2,27 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useLandingPageData } from '@/components/LandingPageDataProvider';
 
-interface ServiceArea {
-  city: string;
-  region: string;
-  description: string;
-}
-
-interface ThemeData {
-  primaryColor: string;
-  secondaryColor: string;
-}
-
-interface ServiceAreasSectionProps {
-  serviceAreas?: ServiceArea[];
-  themeData?: ThemeData;
-}
-
-export default function ServiceAreasSection({
-  serviceAreas,
-  themeData,
-}: ServiceAreasSectionProps) {
+export default function ServiceAreasSection() {
+  const landingPageData = useLandingPageData();
+  const serviceAreas = landingPageData.businessData.serviceAreas;
+  const themeData = landingPageData.themeData;
   const [isLoaded, setIsLoaded] = useState(false);
   
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation<HTMLHeadingElement>({ threshold: 0.3 });

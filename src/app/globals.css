@@ -74,6 +74,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Global heading typography to match HeroSection serif title */
+h1, h2, h3 {
+  font-family: 'serif', Georgia, 'Times New Roman', serif;
+}
+
 /* Utility classes for theme colors */
 .text-primary {
   color: var(--color-primary);
@@ -131,7 +136,7 @@ body {
   line-height: 1.1;
   color: #2d2d2d; /* Soft dark gray instead of white */
   margin-bottom: 1.5rem;
-  font-family: var(--font-playfair), 'Times New Roman', serif; /* Elegant serif */
+  font-family: 'serif', Georgia, 'Times New Roman', serif; /* Elegant serif */
   letter-spacing: -0.02em;
 }
 
@@ -143,13 +148,13 @@ body {
 
 .hero-subtitle {
   color: #4a4a4a; /* Medium gray */
-  font-family: var(--font-inter), 'Helvetica Neue', sans-serif; /* Clean sans-serif */
+  font-family: Arial, Helvetica, sans-serif; /* Clean sans-serif */
   font-weight: 500;
 }
 
 .hero-description {
   color: #6b6b6b; /* Lighter gray */
-  font-family: var(--font-inter), 'Helvetica Neue', sans-serif; /* Clean sans-serif */
+  font-family: Arial, Helvetica, sans-serif; /* Clean sans-serif */
   font-weight: 400;
 }
 
@@ -212,14 +217,14 @@ body {
 
 .navbar-logo-text {
   color: #2d2d2d;
-  font-family: var(--font-playfair), 'Times New Roman', serif;
+  font-family: 'serif', Georgia, 'Times New Roman', serif;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 
 .navbar-link {
   color: #6b6b6b;
-  font-family: var(--font-inter), 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 500;
   font-size: 0.95rem;
   transition: all 0.3s ease;
@@ -252,7 +257,7 @@ body {
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 50px;
-  font-family: var(--font-inter), 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   text-transform: uppercase;
@@ -290,7 +295,7 @@ body {
 
 .navbar-mobile-link {
   color: #4a4a4a;
-  font-family: var(--font-inter), 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 500;
   padding: 1rem 1.5rem;
   border-radius: 12px;
@@ -311,7 +316,7 @@ body {
   color: white;
   padding: 1rem 2rem;
   border-radius: 50px;
-  font-family: var(--font-inter), 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   text-transform: uppercase;
@@ -654,7 +659,7 @@ body {
   line-height: 1.1;
   color: #1a1a1a;
   margin-bottom: 2rem;
-  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-family: 'serif', Georgia, 'Times New Roman', serif;
   letter-spacing: -0.02em;
   position: relative;
 }
@@ -694,7 +699,7 @@ body {
   font-size: 1.5rem;
   font-weight: 400;
   color: var(--salon-gold);
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   opacity: 0.9;
@@ -704,7 +709,7 @@ body {
   font-size: 1.25rem;
   line-height: 1.8;
   color: #4a4a4a;
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 300;
   max-width: 90%;
 }
@@ -896,7 +901,7 @@ body {
 
 .minimal-logo-text {
   color: white;
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
   font-size: 1.2rem;
   margin-left: 0.5rem;
@@ -1000,7 +1005,7 @@ body {
 
 .minimal-nav-link {
   position: relative;
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 500;
   font-size: 0.95rem;
   padding: 0.25rem 0;
@@ -1073,7 +1078,7 @@ body {
 .minimal-nav-link {
   position: relative;
   color: #333;
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 500;
   font-size: 0.9rem;
   text-decoration: none;
@@ -1140,7 +1145,7 @@ body {
 
 .luxury-logo-text {
   color: white;
-  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-family: 'serif', Georgia, 'Times New Roman', serif;
   font-weight: 700;
   font-style: italic;
   font-size: 1.3rem;
@@ -1152,7 +1157,7 @@ body {
 
 .luxury-logo-text-only {
   color: white;
-  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-family: 'serif', Georgia, 'Times New Roman', serif;
   font-weight: 700;
   font-style: italic;
   font-size: 1.2rem;
@@ -1304,7 +1309,7 @@ body {
 
 .luxury-mobile-logo-text {
   color: #2d2d2d;
-  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-family: 'serif', Georgia, 'Times New Roman', serif;
   font-weight: 600;
   font-size: 2rem;
   letter-spacing: -0.01em;
@@ -1359,7 +1364,7 @@ body {
   position: relative;
   z-index: 10;
   color: #2d2d2d;
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 500;
   font-size: 1.1rem;
   letter-spacing: 0.02em;
@@ -1436,7 +1441,7 @@ body {
   position: relative;
   z-index: 10;
   color: white;
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
   font-size: 1.1rem;
   letter-spacing: 0.05em;

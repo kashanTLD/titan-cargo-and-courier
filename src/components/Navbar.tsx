@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
 interface NavbarProps {
   businessName?: string;
@@ -14,10 +15,40 @@ interface NavbarProps {
 }
 
 export default function Navbar({
-  businessName = "Business",
+  businessName,
   themeData,
   phoneNumber,
 }: NavbarProps) {
+  // Helper to apply alpha to any CSS color (hex, rgb, rgba). Falls back to original color.
+  const withAlpha = (color?: string, alpha: number = 1): string | undefined => {
+    if (!color) return undefined;
+    const a = Math.max(0, Math.min(1, alpha));
+    const hexMatch = color.match(/^#([\da-f]{3}|[\da-f]{6})$/i);
+    if (hexMatch) {
+      let hex = hexMatch[1];
+      if (hex.length === 3) {
+        hex = hex.split('').map((c) => c + c).join('');
+      }
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
+    const rgbMatch = color.match(/^rgba?\(([^)]+)\)$/i);
+    if (rgbMatch) {
+      const parts = rgbMatch[1].split(',').map((p) => p.trim());
+      const r = parseInt(parts[0], 10) || 0;
+      const g = parseInt(parts[1], 10) || 0;
+      const b = parseInt(parts[2], 10) || 0;
+      return `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
+    // Unsupported format (e.g., named color); return as-is without alpha
+    return color;
+  };
+  const landing = useLandingPageData();
+  const resolvedBusinessName = businessName || landing?.businessName || "Business";
+  const resolvedTheme = themeData || landing?.themeData;
+  const resolvedPhone = phoneNumber || landing?.businessData?.phone;
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -45,18 +76,18 @@ export default function Navbar({
   }, [lastScrollY]);
 
   useEffect(() => {
-    if (themeData) {
+    if (resolvedTheme) {
       const root = document.documentElement;
-      root.style.setProperty('--theme-primary-color', themeData.primaryColor);
-      root.style.setProperty('--theme-secondary-color', themeData.secondaryColor);
-      root.style.setProperty('--theme-primary-color-border', `${themeData.primaryColor}40`);
-      root.style.setProperty('--theme-primary-color-shadow', `${themeData.primaryColor}30`);
-      root.style.setProperty('--theme-primary-color-shadow-hover', `${themeData.primaryColor}40`);
-      root.style.setProperty('--theme-primary-color-shimmer', `${themeData.primaryColor}20`);
-      root.style.setProperty('--theme-primary-color-glow', `${themeData.primaryColor}20`);
-      root.style.setProperty('--theme-secondary-color-glow', `${themeData.secondaryColor}15`);
+      root.style.setProperty('--theme-primary-color', resolvedTheme.primaryColor);
+      root.style.setProperty('--theme-secondary-color', resolvedTheme.secondaryColor);
+      root.style.setProperty('--theme-primary-color-border', `${resolvedTheme.primaryColor}40`);
+      root.style.setProperty('--theme-primary-color-shadow', `${resolvedTheme.primaryColor}30`);
+      root.style.setProperty('--theme-primary-color-shadow-hover', `${resolvedTheme.primaryColor}40`);
+      root.style.setProperty('--theme-primary-color-shimmer', `${resolvedTheme.primaryColor}20`);
+      root.style.setProperty('--theme-primary-color-glow', `${resolvedTheme.primaryColor}20`);
+      root.style.setProperty('--theme-secondary-color-glow', `${resolvedTheme.secondaryColor}15`);
     }
-  }, [themeData]);
+  }, [resolvedTheme]);
 
   const navItems = [
     { href: "#home", label: "Home" },
@@ -72,19 +103,19 @@ export default function Navbar({
       <nav className={`minimal-navbar transition-all duration-300 ${
         isScrolled ? 'minimal-navbar-scrolled' : ''
       } ${!isVisible ? '-translate-y-full' : 'translate-y-0'}`} style={{ 
-        background: `linear-gradient(135deg, ${themeData?.secondaryColor}CC 0%, ${themeData?.primaryColor}CC 80%, ${themeData?.secondaryColor}CC 100%)`,
+        background: `linear-gradient(135deg, ${withAlpha(resolvedTheme?.secondaryColor, 0.8)} 0%, ${withAlpha(resolvedTheme?.primaryColor, 0.8)} 80%, ${withAlpha(resolvedTheme?.secondaryColor, 0.8)} 100%)`,
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
-        boxShadow: `0 4px 20px ${themeData?.primaryColor}40`
+        boxShadow: `0 4px 20px ${withAlpha(resolvedTheme?.primaryColor, 0.25)}`
       }}>
         <div className="minimal-navbar-container">
           {/* Left Logo */}
           <div className="minimal-logo-container">
             <Link href="/" className="minimal-logo-link">
-            <Image alt="logo" src={'/logo.png' }  width={70} height={70} />
+            <Image alt="logo" src={'/logo.png' }  width={50} height={50} />
              
                 <h1 className="minimal-logo-text text-white">
-                  {businessName}
+                  {resolvedBusinessName}
                 </h1>
               
             </Link>
@@ -99,7 +130,7 @@ export default function Navbar({
                 className="minimal-nav-link group"
               >
                 <span className="text-white">{item.label}</span>
-                <div className="minimal-nav-underline" style={{ backgroundColor: themeData?.primaryColor }}></div>
+                <div className="minimal-nav-underline" style={{ backgroundColor: resolvedTheme?.primaryColor }}></div>
               </Link>
             ))}
           </div>
@@ -107,13 +138,13 @@ export default function Navbar({
           {/* Right CTA Button */}
           <div className="hidden lg:flex items-center">
             <Link
-              href={phoneNumber ? `tel:${phoneNumber}` : "#"}
+              href={resolvedPhone ? `tel:${resolvedPhone}` : "#"}
               className="minimal-cta-button"
               style={{
-                background: `linear-gradient(135deg, ${themeData?.primaryColor} 0%, ${themeData?.secondaryColor} 100%)`,
+                background: `linear-gradient(135deg, ${resolvedTheme?.primaryColor} 0%, ${resolvedTheme?.secondaryColor} 100%)`,
                 color: 'white',
                 borderRadius: '30px',
-                boxShadow: `0 4px 15px ${themeData?.primaryColor}40`
+                boxShadow: `0 4px 15px ${resolvedTheme?.primaryColor}40`
               }}
             >
               Call Us
@@ -130,9 +161,9 @@ export default function Navbar({
               className="minimal-mobile-button"
             >
               <div className={`minimal-hamburger ${isOpen ? 'minimal-hamburger-open' : ''}`}>
-                <span style={{ backgroundColor: themeData?.primaryColor }}></span>
-                <span style={{ backgroundColor: themeData?.primaryColor }}></span>
-                <span style={{ backgroundColor: themeData?.primaryColor }}></span>
+                <span style={{ backgroundColor: resolvedTheme?.primaryColor }}></span>
+                <span style={{ backgroundColor: resolvedTheme?.primaryColor }}></span>
+                <span style={{ backgroundColor: resolvedTheme?.primaryColor }}></span>
               </div>
             </button>
           </div>
@@ -144,7 +175,7 @@ export default function Navbar({
         <div 
           className="luxury-mobile-overlay"
           style={{
-            background: `linear-gradient(135deg, ${themeData?.primaryColor}15 0%, ${themeData?.secondaryColor}15 25%, ${themeData?.primaryColor}10 50%, ${themeData?.secondaryColor}10 75%, ${themeData?.primaryColor}15 100%)`
+            background: `linear-gradient(135deg, ${withAlpha(resolvedTheme?.primaryColor, 0.08)} 0%, ${withAlpha(resolvedTheme?.secondaryColor, 0.08)} 25%, ${withAlpha(resolvedTheme?.primaryColor, 0.06)} 50%, ${withAlpha(resolvedTheme?.secondaryColor, 0.06)} 75%, ${withAlpha(resolvedTheme?.primaryColor, 0.08)} 100%)`
           }}
         >
           <div className="luxury-mobile-content">
@@ -153,7 +184,7 @@ export default function Navbar({
               <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center gap-4">
                 <Image alt="logo" src={'/logo.png' }  width={40} height={40} />
                 <h1 className="luxury-mobile-logo-text">
-                  {businessName}
+                  {resolvedBusinessName}
                 </h1>
               </Link>
             </div>
@@ -178,10 +209,10 @@ export default function Navbar({
             <div className="luxury-mobile-cta-container">
               <Link
                 onClick={() => setIsOpen(false)}
-                href={phoneNumber ? `tel:${phoneNumber}` : "#"}
+                href={resolvedPhone ? `tel:${resolvedPhone}` : "#"}
                 className="luxury-mobile-cta-button group"
                 style={{
-                  background: `linear-gradient(135deg, ${themeData?.primaryColor} 0%, ${themeData?.secondaryColor} 100%)`
+                  background: `linear-gradient(135deg, ${resolvedTheme?.primaryColor} 0%, ${resolvedTheme?.secondaryColor} 100%)`
                 }}
               >
                 <span className="luxury-mobile-cta-text">Call Us Now</span>
@@ -196,15 +227,15 @@ export default function Navbar({
             <div className="luxury-mobile-decorations">
               <div 
                 className="luxury-mobile-decoration luxury-mobile-decoration-1"
-                style={{ backgroundColor: `${themeData?.primaryColor}20` }}
+                style={{ backgroundColor: withAlpha(resolvedTheme?.primaryColor, 0.125) }}
               ></div>
               <div 
                 className="luxury-mobile-decoration luxury-mobile-decoration-2"
-                style={{ backgroundColor: `${themeData?.secondaryColor}20` }}
+                style={{ backgroundColor: withAlpha(resolvedTheme?.secondaryColor, 0.125) }}
               ></div>
               <div 
                 className="luxury-mobile-decoration luxury-mobile-decoration-3"
-                style={{ backgroundColor: `${themeData?.primaryColor}20` }}
+                style={{ backgroundColor: withAlpha(resolvedTheme?.primaryColor, 0.125) }}
               ></div>
             </div>
           </div>

@@ -3,6 +3,7 @@
 import { Image } from "@/types/template";
 import NextImage from "next/image";
 import { useState } from "react";
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
 interface GalleryImage {
   id: string;
@@ -14,8 +15,8 @@ interface GalleryImage {
 }
 
 interface GallerySectionProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   images?: Image[];
 }
 
@@ -24,10 +25,14 @@ export default function GallerySection({
   description,
   images,
 }: GallerySectionProps) {
+  const landing = useLandingPageData();
+  const resolvedTitle = title || landing?.content?.gallery?.title || "Gallery";
+  const resolvedDescription = description || landing?.content?.gallery?.description || "";
+  const resolvedImages = images ?? landing?.images?.filter((img)=> img.category === 'gallery' || img.slotName === 'gallery');
   // Fallback sample images
   const galleryImages: Image[] =
-    images && images.length > 0
-      ? images
+    resolvedImages && resolvedImages.length > 0
+      ? resolvedImages
       : [
           {
             id: "1",
@@ -98,9 +103,9 @@ export default function GallerySection({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-primary mb-4">{title}</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-primary mb-4">{resolvedTitle}</h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
-            {description}
+            {resolvedDescription}
           </p>
         </div>
 

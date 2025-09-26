@@ -6,12 +6,13 @@ import {
   useStaggeredAnimation,
 } from "@/hooks/useScrollAnimation";
 import { useState, useEffect } from "react";
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
 interface AboutSectionProps {
-  title: string;
-  description: string;
-  features: string[];
-  ctaButton: {
+  title?: string;
+  description?: string;
+  features?: string[];
+  ctaButton?: {
     href: string;
     label: string;
   };
@@ -37,6 +38,12 @@ export default function AboutSection({
   images = [],
   theme,
 }: AboutSectionProps) {
+  const landing = useLandingPageData();
+  const resolvedTitle = title || landing?.content?.about?.title || "";
+  const resolvedDescription = description || landing?.content?.about?.description || "";
+  const resolvedFeatures = features || landing?.content?.about?.features || [];
+  const resolvedCta = ctaButton || landing?.content?.about?.ctaButton || { href: "/contact-us", label: "Contact Us" };
+  const resolvedTheme = theme || landing?.themeData;
   const [isLoaded, setIsLoaded] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
@@ -46,7 +53,7 @@ export default function AboutSection({
   const { ref: descRef, isVisible: descVisible } =
     useScrollAnimation<HTMLParagraphElement>({ threshold: 0.2 });
   const { ref: featuresRef, visibleItems } = useStaggeredAnimation(
-    features.length,
+    resolvedFeatures.length,
     150
   );
   const { ref: imageRef, isVisible: imageVisible } =
@@ -76,9 +83,9 @@ export default function AboutSection({
   }, []);
 
   // Theme colors with fallbacks
-  const primaryColor = theme?.primaryColor || "#000000";
-  const secondaryColor = theme?.secondaryColor || "#666666";
-  const accentColor = theme?.accentColor || primaryColor;
+  const primaryColor = resolvedTheme?.primaryColor || "#000000";
+  const secondaryColor = resolvedTheme?.secondaryColor || "#666666";
+  const accentColor = resolvedTheme?.accentColor || primaryColor;
 
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -91,7 +98,7 @@ export default function AboutSection({
   };
 
   // Get about images from the images array
-  const aboutImages = images.filter(
+  const aboutImages = (images.length ? images : (landing?.images || [])).filter(
     (img) => img.slotName.includes("about") || img.category === "about"
   );
 
@@ -360,7 +367,7 @@ export default function AboutSection({
                   transform: `translateY(${scrollY * 0.05}px)`,
                 }}
               >
-                {title}
+                {resolvedTitle}
               </h2>
 
               {/* Divider */}
@@ -388,12 +395,12 @@ export default function AboutSection({
                   transform: `translateY(${scrollY * 0.03}px)`,
                 }}
               >
-                {description}
+                {resolvedDescription}
               </p>
             </div>
-                {features && features.length > 0 && (
+                {resolvedFeatures && resolvedFeatures.length > 0 && (
                   <div ref={featuresRef} className="space-y-6 mb-12">
-                    {features.map((feature, index) => (
+                    {resolvedFeatures.map((feature, index) => (
                       <div
                         key={index}
                         className={`feature-reveal-animation transition-all duration-1000 ${
@@ -437,9 +444,9 @@ export default function AboutSection({
                   </div>
                 )}
 
-                {ctaButton && (
-                  <a href={ctaButton.href} className="royal-cta-button group">
-                    <span className="text-white">{ctaButton.label}</span>
+                {resolvedCta && (
+                  <a href={resolvedCta.href} className="royal-cta-button group">
+                    <span className="text-white">{resolvedCta.label}</span>
                    
                   </a>
                 )}

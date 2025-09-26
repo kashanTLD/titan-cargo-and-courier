@@ -3,6 +3,8 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Image as ImageType } from "@/types/template";
 import Image from "next/image";
+import Link from "next/link";
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
 interface Service {
   name: string;
@@ -12,24 +14,15 @@ interface Service {
   cta?: { href: string; label: string };
 }
 
-interface ServicesSectionProps {
-  title: string;
-  description: string;
-  services: Service[];
-  theme?: {
-    primaryColor: string;
-    secondaryColor: string;
-  };
-  images: ImageType[] ;
-}
-
-export default function ServicesSection({
-  title,
-  description,
-  services,
-  theme,
-  images,
-}: ServicesSectionProps) {
+export default function ServicesSection() {
+  const landingPageData = useLandingPageData();
+  
+  // Get data from context
+  const title = landingPageData?.content?.services?.title || "Our Services";
+  const description = landingPageData?.content?.services?.description || "Discover our range of professional services designed to meet your needs.";
+  const services = landingPageData?.content?.services?.services || [];
+  const theme = landingPageData?.themeData;
+  const images = landingPageData?.images?.filter((img) => img.slotName.includes("services")) || [];
   const { ref: titleRef, isVisible: titleVisible } =
     useScrollAnimation<HTMLHeadingElement>({ threshold: 0.2 });
   const { ref: descRef, isVisible: descVisible } =
@@ -108,42 +101,26 @@ export default function ServicesSection({
                       <p className="text-sm text-gray-600 line-clamp-2">
                         {service.description}
                       </p>
-                      <div className="mt-auto pt-2">
-                        <a
-                          href={service.cta?.href || "#"}
-                          className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2 rounded-md text-xs tracking-[0.2em] font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 uppercase"
-                          style={{
-                            color: theme?.primaryColor || '#7c4a35',
-                            border: `1px solid ${theme?.primaryColor || '#7c4a35'}`,
-                          }}
-                          onMouseEnter={(e) => {
-                            (e.currentTarget as HTMLAnchorElement).style.color = '#ffffff';
-                            (e.currentTarget as HTMLAnchorElement).style.background = theme ? `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})` : '#111111';
-                          }}
-                          onMouseLeave={(e) => {
-                            (e.currentTarget as HTMLAnchorElement).style.background = 'transparent';
-                            (e.currentTarget as HTMLAnchorElement).style.color = theme?.primaryColor || '#7c4a35';
-                          }}
-                          aria-label={`${service.cta?.label || "Learn More"} about ${service.name}`}
-                        >
-                          {service.cta?.label || "Learn More"}
-                        </a>
-                      </div>
+                     
                     </div>
-
-                    {/* Decorative subtle corner icon */}
-                    <div className="pointer-events-none absolute top-3 right-3 opacity-20">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.2" />
-                        <path d="M12 7v10M7 12h10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                      </svg>
-                    </div>
+                  
                   </article>
                 );
               })}
             </div>
           </div>
         </div>
+            <div className="text-center mt-10 md:mt-20">
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center px-5 py-3 rounded-full text-white font-medium shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 focus:outline-none"
+                style={{
+                  backgroundImage: `linear-gradient(90deg, ${theme?.primaryColor || '#7c4a35'}, ${theme?.secondaryColor || '#b07b62'})`,
+                }}
+              >
+                View all services
+              </Link>
+          </div>
       </div>
     </section>
   );

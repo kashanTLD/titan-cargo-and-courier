@@ -3,19 +3,12 @@
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { ServiceHighlightsContent } from "@/types/template";
 import { useEffect, useState } from "react";
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
-interface ServiceHighlightsSectionProps {
-  data: ServiceHighlightsContent;
-  theme?: {
-    primaryColor: string;
-    secondaryColor: string;
-  };
-}
-
-export default function ServiceHighlightsSection({
-  data,
-  theme,
-}: ServiceHighlightsSectionProps) {
+export default function ServiceHighlightsSection() {
+  const landing = useLandingPageData();
+  const resolvedTheme = landing?.themeData;
+  const resolvedData = landing?.content?.serviceHighlights || { title: '', description: '', services: [] };
   const [isLoaded, setIsLoaded] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
@@ -25,7 +18,7 @@ export default function ServiceHighlightsSection({
   const { ref: descRef, isVisible: descVisible } =
     useScrollAnimation<HTMLParagraphElement>({ threshold: 0.2 });
   const { ref: servicesRef, visibleItems } = useStaggeredAnimation(
-    data.services.length,
+    resolvedData.services.length,
     200
   );
 
@@ -158,7 +151,7 @@ export default function ServiceHighlightsSection({
     /* Card styling with royal aesthetics */
     .royal-service-card {
       background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(var(--theme-primary-rgb), 0.08);
+      border: 1px solid rgba(var(--resolvedTheme-primary-rgb), 0.08);
       border-radius: 24px;
       padding: 3rem 2rem;
       position: relative;
@@ -175,15 +168,15 @@ export default function ServiceHighlightsSection({
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(90deg, var(--theme-primary-color), var(--theme-secondary-color));
+      background: linear-gradient(90deg, var(--resolvedTheme-primary-color), var(--resolvedTheme-secondary-color));
       opacity: 0;
       transition: opacity 0.6s ease;
     }
 
     .royal-service-card:hover {
       transform: translateY(-8px) rotateX(2deg);
-      box-shadow: 0 20px 60px rgba(var(--theme-primary-rgb), 0.15);
-      border-color: rgba(var(--theme-primary-rgb), 0.2);
+      box-shadow: 0 20px 60px rgba(var(--resolvedTheme-primary-rgb), 0.15);
+      border-color: rgba(var(--resolvedTheme-primary-rgb), 0.2);
     }
 
     .royal-service-card:hover::before {
@@ -213,9 +206,9 @@ export default function ServiceHighlightsSection({
       align-items: center;
       justify-content: center;
       color: white;
-      background: linear-gradient(135deg, var(--theme-primary-color), var(--theme-secondary-color));
+      background: linear-gradient(135deg, var(--resolvedTheme-primary-color), var(--resolvedTheme-secondary-color));
       box-shadow: 
-        0 12px 40px rgba(var(--theme-primary-rgb), 0.3),
+        0 12px 40px rgba(var(--resolvedTheme-primary-rgb), 0.3),
         inset 0 2px 8px rgba(255, 255, 255, 0.2);
     }
 
@@ -264,8 +257,8 @@ export default function ServiceHighlightsSection({
     /* Split content background matching hero */
     .split-content {
       background: linear-gradient(135deg, 
-        rgba(var(--theme-primary-rgb), 0.02) 0%, 
-        rgba(var(--theme-secondary-rgb), 0.02) 100%);
+        rgba(var(--resolvedTheme-primary-rgb), 0.02) 0%, 
+        rgba(var(--resolvedTheme-secondary-rgb), 0.02) 100%);
       backdrop-filter: blur(20px);
     }
 
@@ -274,7 +267,7 @@ export default function ServiceHighlightsSection({
     }
 
     .royal-accent {
-      background: linear-gradient(45deg, var(--theme-primary-color), var(--theme-secondary-color));
+      background: linear-gradient(45deg, var(--resolvedTheme-primary-color), var(--resolvedTheme-secondary-color));
       background-size: 200% 200%;
       animation: shimmer-flow 5s ease-in-out infinite;
     }
@@ -314,7 +307,7 @@ export default function ServiceHighlightsSection({
       font-weight: 500;
       line-height: 1.3;
       letter-spacing: 0.01em;
-      background: linear-gradient(135deg, var(--theme-primary-color), var(--theme-secondary-color));
+      background: linear-gradient(135deg, var(--resolvedTheme-primary-color), var(--resolvedTheme-secondary-color));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -329,10 +322,10 @@ export default function ServiceHighlightsSection({
         id="service-highlights"
         className="relative overflow-hidden py-24 bg-white"
         style={{
-          '--theme-primary-color': theme?.primaryColor,
-          '--theme-secondary-color': theme?.secondaryColor,
-          '--theme-primary-rgb': hexToRgb(theme?.primaryColor || '#000000'),
-          '--theme-secondary-rgb': hexToRgb(theme?.secondaryColor || '#000000'),
+          '--resolvedTheme-primary-color': resolvedTheme?.primaryColor,
+          '--resolvedTheme-secondary-color': resolvedTheme?.secondaryColor,
+          '--resolvedTheme-primary-rgb': hexToRgb(resolvedTheme?.primaryColor || '#000000'),
+          '--resolvedTheme-secondary-rgb': hexToRgb(resolvedTheme?.secondaryColor || '#000000'),
         } as React.CSSProperties}
       >
         {/* Royal Background with Parallax - matching hero */}
@@ -341,7 +334,7 @@ export default function ServiceHighlightsSection({
           <div 
             className="absolute top-32 right-1/4 w-96 h-96 organic-shape opacity-4"
             style={{
-              background: `radial-gradient(circle, ${theme?.primaryColor}15, transparent 70%)`,
+              background: `radial-gradient(circle, ${resolvedTheme?.primaryColor}15, transparent 70%)`,
               transform: `translate(${mousePosition.x * 0.2}px, ${mousePosition.y * 0.2}px) translateY(${scrollY * 0.08}px)`
             }}
           />
@@ -349,7 +342,7 @@ export default function ServiceHighlightsSection({
           <div 
             className="absolute bottom-40 left-1/5 w-80 h-80 organic-shape opacity-3"
             style={{
-              background: `radial-gradient(ellipse, ${theme?.secondaryColor}20, transparent 60%)`,
+              background: `radial-gradient(ellipse, ${resolvedTheme?.secondaryColor}20, transparent 60%)`,
               transform: `translate(${-mousePosition.x * 0.15}px, ${-mousePosition.y * 0.15}px) translateY(${scrollY * 0.05}px)`,
               animationDelay: '3s'
             }}
@@ -364,18 +357,18 @@ export default function ServiceHighlightsSection({
               <svg width="100" height="100" viewBox="0 0 100 100">
                 <defs>
                   <linearGradient id="serviceGeometric1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: theme?.primaryColor, stopOpacity: 0.4 }} />
-                    <stop offset="100%" style={{ stopColor: theme?.secondaryColor, stopOpacity: 0.2 }} />
+                    <stop offset="0%" style={{ stopColor: resolvedTheme?.primaryColor, stopOpacity: 0.4 }} />
+                    <stop offset="100%" style={{ stopColor: resolvedTheme?.secondaryColor, stopOpacity: 0.2 }} />
                   </linearGradient>
                 </defs>
                 <polygon 
                   points="50,5 85,35 70,75 30,75 15,35" 
                   fill="url(#serviceGeometric1)" 
-                  stroke={theme?.primaryColor} 
+                  stroke={resolvedTheme?.primaryColor} 
                   strokeWidth="1" 
                   opacity="0.5"
                 />
-                <circle cx="50" cy="40" r="12" fill="none" stroke={theme?.secondaryColor} strokeWidth="1" opacity="0.6" />
+                <circle cx="50" cy="40" r="12" fill="none" stroke={resolvedTheme?.secondaryColor} strokeWidth="1" opacity="0.6" />
               </svg>
             </div>
           </div>
@@ -389,13 +382,13 @@ export default function ServiceHighlightsSection({
                 <rect 
                   x="15" y="15" width="60" height="60" 
                   fill="none" 
-                  stroke={theme?.primaryColor} 
+                  stroke={resolvedTheme?.primaryColor} 
                   strokeWidth="1.5" 
                   opacity="0.4"
                   transform="rotate(30 45 45)"
                 />
-                <circle cx="45" cy="45" r="30" fill="none" stroke={theme?.secondaryColor} strokeWidth="1" opacity="0.3" />
-                <circle cx="45" cy="45" r="15" fill={theme?.primaryColor} opacity="0.1" />
+                <circle cx="45" cy="45" r="30" fill="none" stroke={resolvedTheme?.secondaryColor} strokeWidth="1" opacity="0.3" />
+                <circle cx="45" cy="45" r="15" fill={resolvedTheme?.primaryColor} opacity="0.1" />
             </svg>
             </div>
           </div>
@@ -422,14 +415,14 @@ export default function ServiceHighlightsSection({
           <div 
             className="absolute top-1/2 left-1/4 w-4 h-4 rounded-full floating-element opacity-6"
             style={{ 
-              backgroundColor: `${theme?.primaryColor}50`,
+              backgroundColor: `${resolvedTheme?.primaryColor}50`,
               animationDelay: '2s'
             }}
           />
           <div 
             className="absolute top-1/4 right-1/3 w-3 h-3 rounded-full floating-element opacity-5"
             style={{ 
-              backgroundColor: `${theme?.secondaryColor}60`,
+              backgroundColor: `${resolvedTheme?.secondaryColor}60`,
               animationDelay: '4s'
             }}
           />
@@ -448,11 +441,11 @@ export default function ServiceHighlightsSection({
               <div 
                 className="w-16 h-16 rounded-full flex items-center justify-center mx-auto floating-element"
                 style={{
-                  background: `linear-gradient(135deg, ${theme?.primaryColor}10, ${theme?.secondaryColor}10)`,
-                  border: `1px solid ${theme?.primaryColor}20`
+                  background: `linear-gradient(135deg, ${resolvedTheme?.primaryColor}10, ${resolvedTheme?.secondaryColor}10)`,
+                  border: `1px solid ${resolvedTheme?.primaryColor}20`
                 }}
               >
-                <svg className="w-7 h-7" style={{ color: theme?.primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-7 h-7" style={{ color: resolvedTheme?.primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               </div>
@@ -472,7 +465,7 @@ export default function ServiceHighlightsSection({
                   transform: `translateY(${scrollY * 0.05}px)`
                 }}
             >
-              {data.title}
+              {resolvedData.title}
             </h2>
             
               {/* Elegant divider */}
@@ -482,7 +475,7 @@ export default function ServiceHighlightsSection({
                     titleVisible ? 'w-24 opacity-50' : 'w-0 opacity-0'
                 }`}
                 style={{
-                    background: `linear-gradient(90deg, transparent, ${theme?.primaryColor}, ${theme?.secondaryColor}, transparent)`
+                    background: `linear-gradient(90deg, transparent, ${resolvedTheme?.primaryColor}, ${resolvedTheme?.secondaryColor}, transparent)`
                 }}
               />
               </div>
@@ -501,7 +494,7 @@ export default function ServiceHighlightsSection({
                 transform: `translateY(${scrollY * 0.03}px)`
               }}
             >
-              {data.description}
+              {resolvedData.description}
             </p>
           </div>
 
@@ -510,7 +503,7 @@ export default function ServiceHighlightsSection({
             ref={servicesRef}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10"
           >
-            {data.services && data.services.length > 0 ? data.services.map((service, index) => {
+            {resolvedData.services && resolvedData.services.length > 0 ? resolvedData.services.map((service, index) => {
               const { value, suffix } = formatDisplayValue(service.description);
               
               return (
@@ -552,17 +545,17 @@ export default function ServiceHighlightsSection({
                     <div className="flex items-center justify-center space-x-3 opacity-60">
                       <div 
                         className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: theme?.primaryColor }}
+                        style={{ backgroundColor: resolvedTheme?.primaryColor }}
                       />
                       <div 
                         className="w-12 h-px"
                         style={{ 
-                          background: `linear-gradient(90deg, ${theme?.primaryColor}, ${theme?.secondaryColor})` 
+                          background: `linear-gradient(90deg, ${resolvedTheme?.primaryColor}, ${resolvedTheme?.secondaryColor})` 
                         }}
                       />
                       <div 
                         className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: theme?.secondaryColor }}
+                        style={{ backgroundColor: resolvedTheme?.secondaryColor }}
                       />
                     </div>
 
@@ -570,7 +563,7 @@ export default function ServiceHighlightsSection({
                     <div 
                       className="absolute top-6 right-6 w-2 h-2 rounded-full floating-element opacity-40"
                       style={{ 
-                        backgroundColor: theme?.primaryColor,
+                        backgroundColor: resolvedTheme?.primaryColor,
                         animationDelay: `${index * 0.7}s`
                       }}
                     />
@@ -583,10 +576,10 @@ export default function ServiceHighlightsSection({
                   <div 
                     className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
                     style={{ 
-                      background: `linear-gradient(135deg, ${theme?.primaryColor}15, ${theme?.secondaryColor}15)` 
+                      background: `linear-gradient(135deg, ${resolvedTheme?.primaryColor}15, ${resolvedTheme?.secondaryColor}15)` 
                     }}
                   >
-                    <svg className="w-10 h-10" style={{ color: theme?.primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-10 h-10" style={{ color: resolvedTheme?.primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                     </svg>
                   </div>
@@ -602,7 +595,7 @@ export default function ServiceHighlightsSection({
               <div 
                 className="w-20 h-px floating-element opacity-60"
                 style={{
-                  background: `linear-gradient(90deg, transparent, ${theme?.primaryColor}, transparent)`,
+                  background: `linear-gradient(90deg, transparent, ${resolvedTheme?.primaryColor}, transparent)`,
                   animationDelay: '0s'
                 }}
               />
@@ -610,14 +603,14 @@ export default function ServiceHighlightsSection({
                 <div 
                   className="w-2 h-2 rounded-full floating-element"
                   style={{ 
-                    backgroundColor: theme?.primaryColor,
+                    backgroundColor: resolvedTheme?.primaryColor,
                     animationDelay: '1s'
                   }}
                 />
                 <span 
                   className="text-lg font-light tracking-wide"
                   style={{ 
-                    background: `linear-gradient(135deg, ${theme?.primaryColor}, ${theme?.secondaryColor})`,
+                    background: `linear-gradient(135deg, ${resolvedTheme?.primaryColor}, ${resolvedTheme?.secondaryColor})`,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text'
@@ -628,7 +621,7 @@ export default function ServiceHighlightsSection({
                 <div 
                   className="w-2 h-2 rounded-full floating-element"
                   style={{ 
-                    backgroundColor: theme?.secondaryColor,
+                    backgroundColor: resolvedTheme?.secondaryColor,
                     animationDelay: '2s'
                   }}
                 />
@@ -636,7 +629,7 @@ export default function ServiceHighlightsSection({
               <div 
                 className="w-20 h-px floating-element opacity-60"
                 style={{
-                  background: `linear-gradient(90deg, transparent, ${theme?.secondaryColor}, transparent)`,
+                  background: `linear-gradient(90deg, transparent, ${resolvedTheme?.secondaryColor}, transparent)`,
                   animationDelay: '0.5s'
                 }}
               />

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
 interface SocialLink {
   platform: string;
@@ -33,25 +34,16 @@ interface BusinessData {
   serviceAreas?: ServiceArea[];
 }
 
-interface FooterSectionProps {
-  businessName: string;
-  businessDescription?: string;
-  businessData?: BusinessData;
-  themeData?: ThemeData;
-  copyright?: string;
-}
-
-export default function FooterSection({
-  businessName,
-  businessDescription,
-  businessData,
-  themeData,
-  copyright,
-}: FooterSectionProps) {
+export default function FooterSection() {
+  const landing = useLandingPageData();
+  const resolvedBusinessName = landing?.businessName || "Business";
+  const resolvedBusinessDescription = landing?.content?.about?.description || "";
+  const resolvedBusinessData = landing?.businessData;
+  const resolvedTheme = landing?.themeData;
   const { ref: footerRef, isVisible: footerVisible } =
     useScrollAnimation<HTMLElement>({ threshold: 0.1 });
   const { ref: serviceAreasRef } = useStaggeredAnimation(
-    businessData?.serviceAreas?.length || 0,
+    resolvedBusinessData?.serviceAreas?.length || 0,
     100
   );
 
@@ -94,20 +86,20 @@ export default function FooterSection({
       ref={footerRef}
       id="contact"
       className="py-16 sm:py-20 md:py-24 relative overflow-hidden"
-      style={{ backgroundColor: themeData?.secondaryColor || '#1f2937' }}
+      style={{ backgroundColor: resolvedTheme?.secondaryColor || '#1f2937' }}
     >
       {/* Subtle background gradients */}
       <div className="absolute inset-0 opacity-10">
         <div 
           className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl"
           style={{
-            background: `radial-gradient(circle, ${themeData?.primaryColor || '#6366f1'}, transparent 70%)`,
+            background: `radial-gradient(circle, ${resolvedTheme?.primaryColor || '#6366f1'}, transparent 70%)`,
           }}
         />
         <div 
           className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full blur-3xl"
           style={{
-            background: `radial-gradient(circle, ${themeData?.secondaryColor || '#8b5cf6'}, transparent 70%)`,
+            background: `radial-gradient(circle, ${resolvedTheme?.secondaryColor || '#8b5cf6'}, transparent 70%)`,
           }}
         />
       </div>
@@ -126,7 +118,7 @@ export default function FooterSection({
               >
                 <Image
                   src={'/logo.png'}
-                  alt={`${businessName} logo`}
+                  alt={`${resolvedBusinessName} logo`}
                   width={100}
                   height={100}
                   className="h-12 w-auto hover:scale-105 transition-transform duration-300"
@@ -137,24 +129,24 @@ export default function FooterSection({
                 footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
             >
-              {businessName}
+              {resolvedBusinessName}
             </h3>
               </div>
             
           
             
-            {businessDescription && (
+            {resolvedBusinessDescription && (
               <p 
                 className={`text-gray-300 mb-6 leading-relaxed max-w-md transition-all duration-1000 delay-300 ${
                   footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
-                {businessDescription}
+                {resolvedBusinessDescription}
               </p>
             )}
 
             {/* Social Links */}
-            {businessData?.socialLinks && businessData.socialLinks.length > 0 && (
+            {resolvedBusinessData?.socialLinks && resolvedBusinessData.socialLinks.length > 0 && (
               <div 
                 className={`transition-all duration-1000 delay-500 ${
                   footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -162,7 +154,7 @@ export default function FooterSection({
               >
                 <p className="text-white font-medium mb-4">Follow Us</p>
                 <div className="flex space-x-4">
-                  {businessData.socialLinks.map((social, index) => {
+                  {resolvedBusinessData.socialLinks.map((social, index) => {
                     const iconPath = getSocialIcon(social.platform);
                     return (
                       <a
@@ -174,7 +166,7 @@ export default function FooterSection({
                           backdropFilter: 'blur(10px)',
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = themeData?.primaryColor || '#6366f1';
+                          e.currentTarget.style.backgroundColor = resolvedTheme?.primaryColor || '#6366f1';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -208,7 +200,7 @@ export default function FooterSection({
               className={`text-lg font-semibold mb-6 transition-all duration-1000 delay-400 ${
                 footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
-              style={{ color: themeData?.primaryColor || '#ffffff' }}
+              style={{ color: resolvedTheme?.primaryColor || '#ffffff' }}
             >
               Quick Links
             </h4>
@@ -245,7 +237,7 @@ export default function FooterSection({
               className={`text-lg font-semibold mb-6 transition-all duration-1000 delay-600 ${
                 footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
-              style={{ color: themeData?.primaryColor || '#ffffff' }}
+              style={{ color: resolvedTheme?.primaryColor || '#ffffff' }}
             >
               Contact Info
             </h4>
@@ -254,51 +246,51 @@ export default function FooterSection({
                 footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
             >
-              {businessData?.phone && (
+              {resolvedBusinessData?.phone && (
                 <div className="flex items-center space-x-3">
                   <div 
                     className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: `${themeData?.primaryColor}20` }}
+                    style={{ backgroundColor: `${resolvedTheme?.primaryColor}20` }}
                   >
-                    <svg className="w-4 h-4" style={{ color: themeData?.primaryColor }} fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" style={{ color: resolvedTheme?.primaryColor }} fill="currentColor" viewBox="0 0 24 24">
                       <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                     </svg>
                   </div>
-                  <a href={`tel:${businessData.phone}`} className="hover:text-white transition-colors" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                    {businessData.phone}
+                  <a href={`tel:${resolvedBusinessData.phone}`} className="hover:text-white transition-colors" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                    {resolvedBusinessData.phone}
                   </a>
                 </div>
               )}
               
-              {businessData?.email && (
+              {resolvedBusinessData?.email && (
                 <div className="flex items-center space-x-3">
                   <div 
                     className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: `${themeData?.secondaryColor}20` }}
+                    style={{ backgroundColor: `${resolvedTheme?.secondaryColor}20` }}
                   >
-                    <svg className="w-4 h-4" style={{ color: themeData?.secondaryColor }} fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" style={{ color: resolvedTheme?.secondaryColor }} fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                     </svg>
                   </div>
-                  <a href={`mailto:${businessData.email}`} className="hover:text-white transition-colors" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                    {businessData.email}
+                  <a href={`mailto:${resolvedBusinessData.email}`} className="hover:text-white transition-colors" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                    {resolvedBusinessData.email}
                   </a>
                 </div>
               )}
 
-              {businessData?.address && (
+              {resolvedBusinessData?.address && (
                 <div className="flex items-start space-x-3">
                   <div 
                     className="w-8 h-8 rounded-lg flex items-center justify-center mt-1"
-                    style={{ backgroundColor: `${themeData?.primaryColor}20` }}
+                    style={{ backgroundColor: `${resolvedTheme?.primaryColor}20` }}
                   >
-                    <svg className="w-4 h-4" style={{ color: themeData?.primaryColor }} fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" style={{ color: resolvedTheme?.primaryColor }} fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                     </svg>
                   </div>
                   <div className="text-gray-300" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                    <div>{businessData.address.street}</div>
-                    <div>{businessData.address.city}, {businessData.address.state} {businessData.address.zipCode}</div>
+                    <div>{resolvedBusinessData.address.street}</div>
+                    <div>{resolvedBusinessData.address.city}, {resolvedBusinessData.address.state} {resolvedBusinessData.address.zipCode}</div>
                   </div>
                 </div>
               )}
@@ -314,7 +306,7 @@ export default function FooterSection({
             }`}
           >
             <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-              {copyright || `© ${new Date().getFullYear()} ${businessName}. All rights reserved.`}
+            2025 Titan Cargo and Courier LLC. All Rights Reserved. Build by <a href="https://usbrandbooster.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">US Brand Booster LLC</a>
             </p>
           </div>
         </div>

@@ -3,15 +3,20 @@
 import { useState, useEffect, useRef } from 'react';
 import NextImage from 'next/image';
 import { CTAContent, ThemeData, Image } from '@/types/template';
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 interface CTASectionProps {
-  data: CTAContent;
+  data?: CTAContent;
   theme?: ThemeData;
   images?: Image[];
 }
 
 const CTASection: React.FC<CTASectionProps> = ({ data, theme, images }) => {
+  const landing = useLandingPageData();
+  const resolvedData = data || landing?.content?.ctaSection;
+  const resolvedTheme = theme || landing?.themeData;
+  const resolvedImages = images || landing?.images;
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -21,9 +26,9 @@ const CTASection: React.FC<CTASectionProps> = ({ data, theme, images }) => {
   const { ref: descriptionRef, isVisible: descriptionVisible } = useScrollAnimation<HTMLParagraphElement>({ threshold: 0.1 });
   const { ref: ctaButtonRef, isVisible: ctaButtonVisible } = useScrollAnimation<HTMLAnchorElement>({ threshold: 0.1 });
 
-  const primaryColor = theme?.primaryColor || '#3B82F6';
-  const secondaryColor = theme?.secondaryColor || '#1E40AF';
-  const ctaImage = images?.find(img => img.slotName === 'cta-image-1')?.imageUrl || 'https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg';
+  const primaryColor = resolvedTheme?.primaryColor || '#fff';
+  const secondaryColor = resolvedTheme?.secondaryColor || '#fff';
+  const ctaImage = resolvedImages?.find(img => img.slotName === 'cta-image-1')?.imageUrl || 'https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg';
 
   useEffect(() => {
     setIsLoaded(true);
@@ -168,7 +173,7 @@ const CTASection: React.FC<CTASectionProps> = ({ data, theme, images }) => {
       <div
         className="overlay-layer"
         style={{
-          background: `linear-gradient(135deg, ${hexToRgb(theme?.primaryColor || '#3B82F6', 0.65)}, ${hexToRgb(theme?.secondaryColor || '#1E40AF', 0.65)})`
+          background: `linear-gradient(135deg, ${hexToRgb(resolvedTheme?.primaryColor || '#3B82F6', 0.65)}, ${hexToRgb(resolvedTheme?.secondaryColor || '#1E40AF', 0.65)})`
         }}
       />
       <div
@@ -221,7 +226,7 @@ const CTASection: React.FC<CTASectionProps> = ({ data, theme, images }) => {
               className={`royal-subheading mb-4 fade-in-up ${headingVisible ? 'visible' : ''}`}
               style={{ animationDelay: '0.2s' }}
             >
-              {data.subHeading}
+              {resolvedData?.subHeading}
             </p>
             
             {/* Elegant divider */}
@@ -240,7 +245,7 @@ const CTASection: React.FC<CTASectionProps> = ({ data, theme, images }) => {
               className={`royal-heading mb-6 fade-in-up ${headingVisible ? 'visible' : ''}`}
               style={{ animationDelay: '0.4s' }}
             >
-              {data.heading}
+              {resolvedData?.heading}
             </h2>
 
             {/* Description */}
@@ -251,22 +256,22 @@ const CTASection: React.FC<CTASectionProps> = ({ data, theme, images }) => {
               }`}
               style={{ animationDelay: '0.6s' }}
             >
-              {data.description}
+              {resolvedData?.description}
             </p>
 
             {/* CTA Button - completely isolated and guaranteed clickable */}
-            {data.ctaButton && (
+            {resolvedData?.ctaButton && (
               <div 
                 className={`fade-in-up ${ctaButtonVisible ? 'visible' : ''}`}
                 style={{ animationDelay: '0.8s' }}
               >
                 <a
                   ref={ctaButtonRef}
-                  href={data.ctaButton.href}
+                  href={resolvedData.ctaButton.href}
                   className="cta-button inline-flex items-center gap-4 px-12 py-5 text-base font-medium text-white bg-transparent relative overflow-hidden transition-all duration-500 ease-out backdrop-blur-sm border border-white/20 rounded-full hover:-translate-y-1 hover:shadow-2xl hover:border-white/40 hover:bg-white/10 group"
                 >
                   <span className="relative z-10 transition-colors duration-300">
-                    {data.ctaButton.label}
+                    {resolvedData.ctaButton.label}
                   </span>
                   <svg 
                     className="w-5 h-5 relative z-10 transition-all duration-300 group-hover:translate-x-2" 

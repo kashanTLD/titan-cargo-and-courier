@@ -3,10 +3,11 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 import { CompanyDetailsContent, Image as ImageType } from '@/types/template';
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 interface CompanyDetailsProps {
-  data: CompanyDetailsContent;
+  data?: CompanyDetailsContent;
   images?: ImageType[];
   theme?: {
     primaryColor: string;
@@ -15,17 +16,21 @@ interface CompanyDetailsProps {
 }
 
 export default function CompanyDetails({ data, images, theme }: CompanyDetailsProps) {
+  const landing = useLandingPageData();
+  const resolvedTheme = theme || landing?.themeData;
+  const resolvedImages = images || landing?.images;
+  const resolvedData = data || landing?.content?.companyDetails;
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.3 });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  if (!data || !data.sections || data.sections.length === 0) {
+  if (!resolvedData || !resolvedData.sections || resolvedData.sections.length === 0) {
     return null;
   }
 
   const getImageForSection = (sectionIndex: number) => {
     const preferredSlot = `companyDetails-image-${sectionIndex + 1}`;
     return (
-      images?.find(img => img.slotName === preferredSlot)
+      resolvedImages?.find(img => img.slotName === preferredSlot)
     );
   };
 
@@ -195,7 +200,7 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
                 headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
               }`}
             >
-              {data.heading}
+              {resolvedData.heading}
             </h2>
             <div className="flex items-center justify-center">
               <div 
@@ -205,13 +210,13 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
                 style={{ background: `linear-gradient(90deg, ${theme?.primaryColor}, transparent)` }}
               />
             </div>
-            {data.description && (
+            {resolvedData.description && (
               <p 
                 className={`max-w-2xl mx-auto text-gray-600 text-base md:text-lg leading-relaxed tracking-wide normal-case transition-all duration-1200 delay-300 ${
                   headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
-                {data.description}
+                {resolvedData.description}
               </p>
             )}
           </div>
@@ -219,7 +224,7 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
           {/* Card grid (large devices) with hover emphasis */}
           <div className="hidden lg:block mt-6">
             <div className="cards-grid">
-              {data.sections.slice(0, 3).map((section, i) => (
+              {resolvedData.sections.slice(0, 3).map((section, i) => (
                 <div
                   key={`preview-${i}`}
                   className={`category-card ${

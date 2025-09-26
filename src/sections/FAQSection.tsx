@@ -2,26 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useLandingPageData } from '@/components/LandingPageDataProvider';
 
-interface FAQSectionProps {
-  title: string;
-  description: string;
-  questions: Array<{
-    question: string;
-    answer: string;
-  }>;
-  themeData?: {
-    primaryColor: string;
-    secondaryColor: string;
-  };
-}
-
-export default function FAQSection({
-  title,
-  description,
-  questions,
-  themeData = { primaryColor: '#6366f1', secondaryColor: '#8b5cf6' }
-}: FAQSectionProps) {
+export default function FAQSection() {
+  const landingPageData = useLandingPageData();
+  const { title, description, questions } = landingPageData.content.faq || {};
+  const themeData = landingPageData.themeData;
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   
@@ -98,7 +84,7 @@ export default function FAQSection({
 
           {/* FAQ Questions */}
           <div className="space-y-4 mb-12">
-            {questions.map((faq, index) => (
+            {questions?.map((faq, index) => (
               <div
                 key={index}
                 className={`rounded-lg overflow-hidden transition-all duration-300 ${

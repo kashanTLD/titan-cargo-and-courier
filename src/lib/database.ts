@@ -1,19 +1,5 @@
-import { Pool } from "pg";
+import { query } from "@/lib/db";
 import { LandingPageData, Image } from "@/types/template";
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-export async function query(text: string, params?: unknown[]) {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(text, params);
-    return result.rows;
-  } finally {
-    client.release();
-  }
-}
 
 export async function fetchLandingPageData(templateId: string, id: string): Promise<LandingPageData | null> {
   try {
@@ -93,16 +79,16 @@ export async function fetchLandingPageForSSG(templateId: string, id: string): Pr
 // Function to get all available landing pages for static generation
 export async function getAllLandingPageIds(): Promise<Array<{ templateId: string; id: string }>> {
   try {
-    const rows = await query(`
+    const rows = await query<{ templateId: string; id: string }>(`
       SELECT "templateId", id 
       FROM "LandingPage" 
       WHERE status = 'published'
       ORDER BY "updatedAt" DESC
     `);
     
-    return rows.map(row => ({
+    return rows.map((row) => ({
       templateId: row.templateId,
-      id: row.id
+      id: row.id,
     }));
   } catch (error) {
     console.error('Error fetching landing page IDs:', error);
@@ -115,11 +101,11 @@ export async function debugDatabaseContent() {
     console.log('🔍 Checking database connection...');
     
     // Test basic connection
-    const testQuery = await query('SELECT NOW() as current_time');
+    const testQuery = await query<{ current_time: string }>('SELECT NOW() as current_time');
     console.log('✅ Database connected successfully at:', testQuery[0]?.current_time);
     
     // Check if LandingPage table exists
-    const tableCheck = await query(`
+    const tableCheck = await query<{ table_name: string }>(`
       SELECT table_name 
       FROM information_schema.tables 
       WHERE table_schema = 'public' AND table_name = 'LandingPage'
@@ -133,15 +119,15 @@ export async function debugDatabaseContent() {
     console.log('✅ LandingPage table exists');
     
     // Check all landing pages
-    const allPages = await query('SELECT id, "templateId", "businessName" FROM "LandingPage"');
+    const allPages = await query<{ id: string; templateId: string; businessName: string }>('SELECT id, "templateId", "businessName" FROM "LandingPage"');
     console.log(`📊 Found ${allPages.length} landing pages in database:`);
     
-    allPages.forEach((page: { id: string; templateId: string; businessName: string }) => {
+    allPages.forEach((page) => {
       console.log(`  - ID: ${page.id}, Template: ${page.templateId}, Business: ${page.businessName}`);
     });
     
     // Check for specific template
-    const specificPage = await query(`
+    const specificPage = await query<{ businessName: string }>(`
       SELECT * FROM "LandingPage" 
       WHERE "templateId" = $1 AND id = $2
     `, ['premium-corporate-template', 'c0f6f1c7-82d2-4410-92ab-26d6071d5c3c']);
