@@ -3,6 +3,8 @@ import Navbar from "@/components/Navbar";
 import FooterSection from "@/sections/FooterSection";
 import ServicesListingSection from "@/sections/ServicesListingSection";
 import { getLandingPageData } from "@/lib/data";
+import { ServicesBanner, ServicesCopySections, ServicesAreas } from "./sections";
+import FAQSection from "@/sections/FAQSection";
 
 export const revalidate = 0;
 
@@ -34,7 +36,21 @@ export default async function ServicesPage() {
     >
       <Navbar />
       <main>
-         <ServicesListingSection />
+        {/* Banner H1 and intro copy */}
+        <ServicesBanner landingPageData={landingPageData} />
+
+        {/* Additional copy sections H2/H3/H5/H6/H7 */}
+        <ServicesCopySections landingPageData={landingPageData} />
+
+        {/* Optional listing of services from DB (existing section) */}
+        <ServicesListingSection />
+
+        {/* Service areas with Philadelphia, PA mention */}
+        <ServicesAreas landingPageData={landingPageData} />
+
+        {/* FAQ with JSON-LD schema, uses DB if available */}
+        <FAQSection/>
+
         <FooterSection />
       </main>
     </Layout>

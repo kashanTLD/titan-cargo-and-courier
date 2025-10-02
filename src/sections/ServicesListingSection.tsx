@@ -41,7 +41,7 @@ export default function ServicesListingSection() {
 
   return (
     <section id="services" className="py-12 sm:py-16 md:py-20 lg:py-24 bg-white relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full md:max-w-[70vw] px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-8">
           {/* Sticky Left Header */}
           <aside className="lg:col-span-4">
@@ -85,7 +85,7 @@ export default function ServicesListingSection() {
                 return (
                   <Link key={serviceId} href={href} className="group">
                     <article
-                      className="relative flex flex-col rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 focus-within:shadow-md"
+                      className="relative flex flex-col rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 focus-within:shadow-md min-h-full"
                       aria-labelledby={`service-title-${index}`}
                     >
                       {/* Image Top */}
@@ -114,9 +114,7 @@ export default function ServicesListingSection() {
                           {service.name}
                         </h3>
                         <p className="text-sm text-gray-600 line-clamp-2">{service.description}</p>
-                        <div className="mt-2 text-sm font-medium text-gray-900/70 group-hover:text-gray-900">
-                          Learn more →
-                        </div>
+                       
                       </div>
                     </article>
                   </Link>

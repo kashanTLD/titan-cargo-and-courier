@@ -171,19 +171,7 @@ export default function FAQSection() {
           >
             
             <button 
-              className="px-8 py-3 font-medium text-white rounded-lg transition-all duration-300 hover:shadow-lg"
-              style={{
-                background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
-                boxShadow: `0 4px 15px rgba(${primaryRgb}, 0.2)`,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = `0 8px 25px rgba(${primaryRgb}, 0.3)`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = `0 4px 15px rgba(${primaryRgb}, 0.2)`;
-              }}>
+              className="px-8 py-3 font-medium text-white rounded-lg transition-all duration-300 hover:shadow-lg">
               Contact Us
             </button>
           </div>

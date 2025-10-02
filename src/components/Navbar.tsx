@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
 interface NavbarProps {
@@ -53,6 +53,26 @@ export default function Navbar({
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+
+  // Delay closing of Services dropdown to improve hover usability
+  const closeServicesTimeoutRef = useRef<number | null>(null);
+  const openServices = () => {
+    if (closeServicesTimeoutRef.current) {
+      clearTimeout(closeServicesTimeoutRef.current);
+      closeServicesTimeoutRef.current = null;
+    }
+    setServicesOpen(true);
+  };
+  const scheduleCloseServices = () => {
+    if (closeServicesTimeoutRef.current) {
+      clearTimeout(closeServicesTimeoutRef.current);
+    }
+    closeServicesTimeoutRef.current = window.setTimeout(() => {
+      setServicesOpen(false);
+    }, 400);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,13 +109,43 @@ export default function Navbar({
     }
   }, [resolvedTheme]);
 
+  // Cleanup any pending close timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeServicesTimeoutRef.current) {
+        clearTimeout(closeServicesTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const navItems = [
-    { href: "#home", label: "Home" },
-    { href: "#about", label: "About" },
-    { href: "#services", label: "Services" },
-    { href: "#testimonials", label: "Testimonials" },
-    { href: "#contact", label: "Contact" },
+    { href: "/", label: "Home" },
+    { href: "/about-us", label: "About" },
+    { href: "/services", label: "Services" },
+    { href: "/reviews", label: "Testimonials" },
+    { href: "/contact-us", label: "Contact" },
   ];
+
+  // Build services list from landing page data for dropdown
+  const rawServices: unknown[] = Array.isArray(landing?.content?.services?.services)
+    ? (landing?.content?.services?.services as unknown[])
+    : [];
+  const toSlug = (str: string) =>
+    String(str || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
+  const services = rawServices.map((s, idx) => {
+    const obj = (s || {}) as Record<string, unknown>;
+    const id = obj.id as string | number | undefined;
+    const title = typeof obj.title === 'string' ? obj.title : undefined;
+    const name = typeof obj.name === 'string' ? obj.name : undefined;
+    const label = String(title ?? name ?? `Service ${idx + 1}`);
+    const slug = toSlug(label);
+    const href = `/services/${slug || String(id ?? idx + 1)}`;
+    return { label, href };
+  });
 
   return (
     <>
@@ -105,34 +155,71 @@ export default function Navbar({
       } ${!isVisible ? '-translate-y-full' : 'translate-y-0'}`} style={{ 
         background: `linear-gradient(135deg, ${withAlpha(resolvedTheme?.secondaryColor, 0.8)} 0%, ${withAlpha(resolvedTheme?.primaryColor, 0.8)} 80%, ${withAlpha(resolvedTheme?.secondaryColor, 0.8)} 100%)`,
         backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
         boxShadow: `0 4px 20px ${withAlpha(resolvedTheme?.primaryColor, 0.25)}`
       }}>
         <div className="minimal-navbar-container">
           {/* Left Logo */}
           <div className="minimal-logo-container">
-            <Link href="/" className="minimal-logo-link">
-            <Image alt="logo" src={'/logo.png' }  width={50} height={50} />
-             
-                <h1 className="minimal-logo-text text-white">
-                  {resolvedBusinessName}
-                </h1>
-              
+            <Link href="/" replace className="minimal-logo-link">
+              <Image alt="logo" src={'/logo.png' }  width={50} height={50} />
             </Link>
           </div>
 
           {/* Center Navigation */}
           <div className="hidden lg:flex items-center justify-center flex-1 space-x-6">
-            {navItems.map((item, index) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="minimal-nav-link group"
-              >
-                <span className="text-white">{item.label}</span>
-                <div className="minimal-nav-underline" style={{ backgroundColor: resolvedTheme?.primaryColor }}></div>
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              if (item.label === 'Services') {
+                return (
+                  <div
+                    key={item.label}
+                    className="relative"
+                    onMouseEnter={openServices}
+                    onMouseLeave={scheduleCloseServices}
+                  >
+                    <button className="minimal-nav-link group inline-flex items-center gap-1">
+                      <span className="text-white">Services</span>
+                      <svg className={`w-3 h-3 transition-transform ${servicesOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                      </svg>
+                      <div className="minimal-nav-underline" style={{ backgroundColor: resolvedTheme?.primaryColor }}></div>
+                    </button>
+                    {servicesOpen && services.length > 0 && (
+                      <div
+                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 rounded-xl overflow-hidden shadow-xl border border-white/20 backdrop-blur"
+                        style={{
+                          background: `linear-gradient(135deg, ${withAlpha(resolvedTheme?.secondaryColor, 0.9)} 0%, ${withAlpha(resolvedTheme?.primaryColor, 0.9)} 100%)`,
+                        }}
+                      >
+                        <ul className="py-2">
+                          {services.map((svc) => (
+                            <li key={svc.href}>
+                              <Link
+                                href={svc.href}
+                                replace
+                                className="block px-4 py-2 text-white hover:bg-white/10"
+                              >
+                                {svc.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  replace
+                  className="minimal-nav-link group"
+                >
+                  <span className="text-white">{item.label}</span>
+                  <div className="minimal-nav-underline" style={{ backgroundColor: resolvedTheme?.primaryColor }}></div>
+                </Link>
+              );
+            })}
           </div>
 
           {/* Right CTA Button */}
@@ -161,9 +248,9 @@ export default function Navbar({
               className="minimal-mobile-button"
             >
               <div className={`minimal-hamburger ${isOpen ? 'minimal-hamburger-open' : ''}`}>
-                <span style={{ backgroundColor: resolvedTheme?.primaryColor }}></span>
-                <span style={{ backgroundColor: resolvedTheme?.primaryColor }}></span>
-                <span style={{ backgroundColor: resolvedTheme?.primaryColor }}></span>
+                <span style={{ backgroundColor: "white" }}></span>
+                <span style={{ backgroundColor: "white" }}></span>
+                <span style={{ backgroundColor: "white" }}></span>
               </div>
             </button>
           </div>
@@ -181,28 +268,72 @@ export default function Navbar({
           <div className="luxury-mobile-content">
             {/* Mobile Logo */}
             <div className="luxury-mobile-logo">
-              <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center gap-4">
+              <Link href="/" replace onClick={() => setIsOpen(false)} className="flex items-center gap-4">
                 <Image alt="logo" src={'/logo.png' }  width={40} height={40} />
-                <h1 className="luxury-mobile-logo-text">
-                  {resolvedBusinessName}
-                </h1>
               </Link>
             </div>
 
             {/* Mobile Navigation */}
             <nav className="luxury-mobile-nav">
-              {navItems.map((item, index) => (
-                <Link
-                  key={item.href}
-                  onClick={() => setIsOpen(false)}
-                  href={item.href}
-                  className="luxury-mobile-link group"
-                  style={{ animationDelay: `${index * 150}ms` }}
-                >
-                  <span className="luxury-mobile-link-text">{item.label}</span>
-                  <div className="luxury-mobile-link-shimmer"></div>
-                </Link>
-              ))}
+              {navItems.map((item, index) => {
+                if (item.label === 'Services') {
+                  return (
+                    <div key={item.label} className="w-full" style={{ animationDelay: `${index * 150}ms` }}>
+                      <button
+                        type="button"
+                        className="luxury-mobile-link group w-full flex items-center justify-between"
+                        onClick={() => setMobileServicesOpen((v) => !v)}
+                      >
+                        <span className="luxury-mobile-link-text">Services</span>
+                        <svg className={`w-5 h-5 transition-transform ${mobileServicesOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                        </svg>
+                        <div className="luxury-mobile-link-shimmer"></div>
+                      </button>
+                      {/* Direct link to Services page */}
+                      <Link
+                        key="services-root"
+                        onClick={() => setIsOpen(false)}
+                        href="/services"
+                        replace
+                        className="block pl-4 pr-2 py-2 text-white/90 hover:text-white"
+                        style={{ animationDelay: `${(index + 1) * 120}ms` }}
+                      >
+                        View all services
+                      </Link>
+                      {mobileServicesOpen && services.length > 0 && (
+                        <div className="mt-2 ml-4 border-l border-white/20">
+                          {services.map((svc, i) => (
+                            <Link
+                              key={svc.href}
+                              onClick={() => setIsOpen(false)}
+                              href={svc.href}
+                              replace
+                              className="block pl-4 pr-2 py-2 text-white/90 hover:text-white"
+                              style={{ animationDelay: `${(index + i + 1) * 100}ms` }}
+                            >
+                              {svc.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.href}
+                    onClick={() => setIsOpen(false)}
+                    href={item.href}
+                    replace
+                    className="luxury-mobile-link group"
+                    style={{ animationDelay: `${index * 150}ms` }}
+                  >
+                    <span className="luxury-mobile-link-text">{item.label}</span>
+                    <div className="luxury-mobile-link-shimmer"></div>
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* Mobile CTA */}

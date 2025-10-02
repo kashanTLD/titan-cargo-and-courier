@@ -134,7 +134,7 @@ export default function BusinessOverviewSection() {
                 }`}
               >
                 <div>
-                  <h2 className="section-title text-gray-50 mb-6 hover:scale-105 transition-transform duration-300">
+                  <h2 className="section-title text-gray-50 mb-6">
                     {item.heading}
                   </h2>
 
@@ -145,9 +145,9 @@ export default function BusinessOverviewSection() {
                   {item.ctaButton && (
                     <a
                       href={item.ctaButton.href}
-                      className="inline-block px-8 py-4 rounded-xl font-semibold text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:transform hover:-translate-y-1 hover:scale-105 bg-black/70 shadow-black/30 shadow-md group"
+                      className="inline-block px-8 py-4 rounded-xl font-semibold text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 bg-black/50 hover:bg-black/80 group"
                     >
-                      <span className="group-hover:animate-pulse">
+                      <span className="">
                         {item.ctaButton.label}
                       </span>
                     </a>

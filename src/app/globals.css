@@ -920,6 +920,7 @@ h1, h2, h3 {
   justify-content: space-between;
   width: 24px;
   height: 18px;
+  color: white;
 }
 
 .minimal-hamburger span {

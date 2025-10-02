@@ -9,9 +9,9 @@ export const useLandingPageData = () => {
   if (!context) {
     throw new Error("useLandingPageData must be used within LandingPageDataProvider");
   }
+  console.log(context);
   return context;
 };
-
 export function LandingPageDataProvider({
   value,
   children,

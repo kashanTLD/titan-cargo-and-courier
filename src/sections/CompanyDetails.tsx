@@ -254,7 +254,6 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
                   <div className="card-body text-center space-y-3">
                     <h4 className="card-title">{section.heading}</h4>
                     <p className="card-desc">{section.description}</p>
-                    <a className="card-link" href="#">Learn more</a>
                   </div>
                 </div>
               ))}
