@@ -1,30 +1,15 @@
+"use client";
+
 import Layout from "@/components/Layout";
 import Navbar from "@/components/Navbar";
+import Banner from "@/components/Banner";
 import FooterSection from "@/sections/FooterSection";
 import ServicesListingSection from "@/sections/ServicesListingSection";
-import { getLandingPageData } from "@/lib/data";
-import { ServicesBanner, ServicesCopySections, ServicesAreas } from "./sections";
 import FAQSection from "@/sections/FAQSection";
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
-export const revalidate = 0;
-
-export default async function ServicesPage() {
-  const landingPageData = await getLandingPageData();
-
-  if (!landingPageData) {
-    return (
-      <div className="min-h-screen bg-white">
-        <main>
-          <section className="py-16 md:max-w-[70vw] w-full mx-auto px-4 sm:px-6">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">No Services Available</h1>
-              <p className="text-gray-600">Please check back later or contact us for more information.</p>
-            </div>
-          </section>
-        </main>
-      </div>
-    );
-  }
+export default function ServicesPage() {
+  const landingPageData = useLandingPageData();
 
   return (
     <Layout
@@ -35,22 +20,10 @@ export default async function ServicesPage() {
       landingPageData={landingPageData}
     >
       <Navbar />
+      <Banner title="Services" category="services" />
       <main>
-        {/* Banner H1 and intro copy */}
-        <ServicesBanner landingPageData={landingPageData} />
-
-        {/* Additional copy sections H2/H3/H5/H6/H7 */}
-        <ServicesCopySections landingPageData={landingPageData} />
-
-        {/* Optional listing of services from DB (existing section) */}
         <ServicesListingSection />
-
-        {/* Service areas with Philadelphia, PA mention */}
-        <ServicesAreas landingPageData={landingPageData} />
-
-        {/* FAQ with JSON-LD schema, uses DB if available */}
-        <FAQSection/>
-
+        <FAQSection />
         <FooterSection />
       </main>
     </Layout>

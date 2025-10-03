@@ -160,8 +160,8 @@ export default function Navbar({
         <div className="minimal-navbar-container">
           {/* Left Logo */}
           <div className="minimal-logo-container">
-            <Link href="/" replace className="minimal-logo-link">
-              <Image alt="logo" src={'/logo.png' }  width={50} height={50} />
+            <Link href="/" replace className="minimal-logo-link" aria-label={resolvedBusinessName}>
+              <Image alt={`${resolvedBusinessName} logo`} src={'/logo.png' }  width={50} height={50} />
             </Link>
           </div>
 
@@ -176,13 +176,13 @@ export default function Navbar({
                     onMouseEnter={openServices}
                     onMouseLeave={scheduleCloseServices}
                   >
-                    <button className="minimal-nav-link group inline-flex items-center gap-1">
+                    <Link href="/services" replace className="minimal-nav-link group inline-flex items-center gap-1">
                       <span className="text-white">Services</span>
                       <svg className={`w-3 h-3 transition-transform ${servicesOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                       </svg>
                       <div className="minimal-nav-underline" style={{ backgroundColor: resolvedTheme?.primaryColor }}></div>
-                    </button>
+                    </Link>
                     {servicesOpen && services.length > 0 && (
                       <div
                         className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 rounded-xl overflow-hidden shadow-xl border border-white/20 backdrop-blur"

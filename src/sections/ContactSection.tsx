@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from 'react';
 import { BusinessData } from '@/types/template';
 
 interface Schedule {
@@ -20,6 +23,62 @@ interface ContactSectionProps {
 }
 
 export default function ContactSection({ title, description, showMap = true, businessData }: ContactSectionProps) {
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const payload = {
+      firstName: String(data.get('firstName') || '').trim(),
+      lastName: String(data.get('lastName') || '').trim(),
+      email: String(data.get('email') || '').trim(),
+      phone: String(data.get('phone') || '').trim(),
+      message: String(data.get('message') || '').trim(),
+    };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const contentType = res.headers.get('content-type') || '';
+      let payloadBody: unknown = null;
+      if (contentType.includes('application/json')) {
+        payloadBody = await res.json();
+      } else {
+        const text = await res.text();
+        payloadBody = { error: text };
+      }
+
+      if (!res.ok) {
+        const message =
+          typeof payloadBody === 'object' && payloadBody && 'error' in payloadBody
+            ? String((payloadBody as { error?: unknown }).error || 'Failed to send message')
+            : 'Failed to send message';
+        throw new Error(message);
+      }
+
+      setSubmitSuccess(true);
+      form.reset();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unexpected error';
+      setSubmitError(message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
   return (
     <section id="contact" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -113,7 +172,17 @@ export default function ContactSection({ title, description, showMap = true, bus
             <h3 className="text-2xl font-bold text-primary mb-6">
               Send us a message
             </h3>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {submitError && (
+                <div role="alert" className="p-3 rounded-lg border border-red-200 bg-red-50 text-red-800">
+                  {submitError}
+                </div>
+              )}
+              {submitSuccess && !submitError && (
+                <div role="status" className="p-3 rounded-lg border border-green-200 bg-green-50 text-green-800">
+                  Message sent successfully.
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -194,9 +263,12 @@ export default function ContactSection({ title, description, showMap = true, bus
 
               <button
                 type="submit"
-                className="btn-primary w-full py-4 px-6 rounded-lg font-semibold text-white transition-colors"
+                disabled={submitting}
+                className={`btn-primary w-full py-4 px-6 rounded-lg font-semibold text-white transition-colors ${
+                  submitting ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
               >
-                Send Message
+                {submitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>

@@ -10,29 +10,7 @@ interface SocialLink {
   url: string;
 }
 
-interface ThemeData {
-  primaryColor: string;
-  secondaryColor: string;
-}
-
-interface ServiceArea {
-  city: string;
-  region: string;
-  description?: string;
-}
-
-interface BusinessData {
-  email: string;
-  phone: string;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-  };
-  socialLinks?: SocialLink[];
-  serviceAreas?: ServiceArea[];
-}
+// Types are provided by context; local interface declarations removed to avoid unused warnings.
 
 export default function FooterSection() {
   const landing = useLandingPageData();
@@ -42,10 +20,6 @@ export default function FooterSection() {
   const resolvedTheme = landing?.themeData;
   const { ref: footerRef, isVisible: footerVisible } =
     useScrollAnimation<HTMLElement>({ threshold: 0.1 });
-  const { ref: serviceAreasRef } = useStaggeredAnimation(
-    resolvedBusinessData?.serviceAreas?.length || 0,
-    100
-  );
 
   const getSocialIcon = (platform: string) => {
     const platformLower = platform.toLowerCase();

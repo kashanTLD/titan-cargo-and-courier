@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import NextImage from 'next/image';
 import { CTAContent, ThemeData, Image } from '@/types/template';
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';

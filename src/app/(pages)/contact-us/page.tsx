@@ -1,21 +1,17 @@
+"use client";
+
 import Layout from "@/components/Layout";
 import Navbar from "@/components/Navbar";
+import Banner from "@/components/Banner";
 import FooterSection from "@/sections/FooterSection";
 import MapAltSection from "./sections/MapAltSection";
 import ContactInfoAltSection from "./sections/ContactInfoAltSection";
 import BusinessHoursAltSection from "./sections/BusinessHoursAltSection";
-import { getLandingPageData } from "@/lib/data";
 import ContactForm from "./ContactForm";
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
-export const revalidate = 0;
-
-
-export default async function ContactUsPage() {
-  const landingPageData = await getLandingPageData();
-
-  if (!landingPageData) {
-    return <section className="py-16 md:max-w-[70vw] w-full mx-auto px-4 sm:px-6" />;
-  }
+export default function ContactUsPage() {
+  const landingPageData = useLandingPageData();
 
   return (
     <Layout
@@ -26,6 +22,7 @@ export default async function ContactUsPage() {
       landingPageData={landingPageData}
     >
       <Navbar />
+      <Banner title="Contact Us" slotName="contact-hero" />
       <main className="bg-gray-50">
         {/* Hero Section with Contact Form */}
         <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100 w-screen overflow-x-hidden">

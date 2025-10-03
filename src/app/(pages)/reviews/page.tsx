@@ -1,29 +1,14 @@
+"use client";
+
 import Layout from "@/components/Layout";
 import Navbar from "@/components/Navbar";
+import Banner from "@/components/Banner";
 import FooterSection from "@/sections/FooterSection";
 import ReviewsTestimonialsSection from "./sections/ReviewsTestimonialsSection";
-import { getLandingPageData, getReviews } from "@/lib/data";
+import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
-export const revalidate = 0;
-
-// Removed local function - using cached version from lib/data
-
-export default async function ReviewsPage() {
-  const landingPageData = await getLandingPageData();
-  const reviews = await getReviews();
-  const safeReviews = reviews.map((r) => {
-    const v = r?.created_at;
-    let createdIso: string | null = null;
-    if (v instanceof Date) {
-      createdIso = v.toISOString();
-    } else if (typeof v === "string") {
-      const d = new Date(v);
-      createdIso = isNaN(d.getTime()) ? null : d.toISOString();
-    } else {
-      createdIso = null;
-    }
-    return { ...r, created_at: createdIso };
-  });
+export default function ReviewsPage() {
+  const landingPageData = useLandingPageData();
 
   return (
     <Layout
@@ -34,12 +19,12 @@ export default async function ReviewsPage() {
       landingPageData={landingPageData || undefined}
     >
       <Navbar />
+      <Banner title="Reviews" slotName="reviews-hero" />
       <main>
-        <ReviewsTestimonialsSection reviews={safeReviews} />
+        {/* Pass empty reviews to avoid DB fetch; section will fall back to context testimonials */}
+        <ReviewsTestimonialsSection reviews={[]} />
         <FooterSection />
       </main>
     </Layout>
   );
 }
-
-

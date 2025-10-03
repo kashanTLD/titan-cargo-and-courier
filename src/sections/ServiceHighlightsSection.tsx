@@ -1,7 +1,6 @@
 "use client";
 
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
-import { ServiceHighlightsContent } from "@/types/template";
 import { useEffect, useState } from "react";
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
 

@@ -1,22 +1,5 @@
-import Layout from "@/components/Layout";
-import Navbar from "@/components/Navbar";
-import HeroSection from "@/sections/HeroSection";
-import AboutSection from "@/sections/AboutSection";
-import ServicesSection from "@/sections/ServicesSection";
-import TestimonialsSection from "@/sections/TestimonialsSection";
-import GallerySection from "@/sections/GallerySection";
-import BusinessOverviewSection from "@/sections/BusinessOverviewSection";
-import FAQSection from "@/sections/FAQSection";
-import ServiceAreasSection from "@/sections/ServiceAreasSection";
-import ServiceHighlightsSection from "@/sections/ServiceHighlightsSection";
-import FooterSection from "@/sections/FooterSection";
-import CTASection from "@/sections/CTASection";
-import { LandingPageData } from "@/types/template";
-import CompanyDetails from "@/sections/CompanyDetails";
-import { getLandingPageData } from "@/lib/data";
-import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import Link from "next/link";
+import HomeClient from "./HomeClient";
 
 // Enable ISR with 60-second revalidation
 export const revalidate = 60;
@@ -36,19 +19,12 @@ export async function generateStaticParams() {
   return [{ templateId, id }];
 }
 
-// Server-side data fetching for SSG
-async function getLandingPageDataForPage(): Promise<LandingPageData> {
-  const landingPageData = await getLandingPageData();
-
-  if (!landingPageData) {
-    notFound();
-  }
-
-  return landingPageData;
-}
+// Server-side data fetching removed from main render; content will use context via HomeClient
 
 // Generate metadata for Next.js App Router
 export async function generateMetadata(): Promise<Metadata> {
+  // Metadata still reads from server to populate SEO; can be adjusted if DB is unavailable
+  const { getLandingPageData } = await import("@/lib/data");
   const landingPageData = await getLandingPageData();
   if (!landingPageData) {
     return {
@@ -107,70 +83,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Home() {
-  const landingPageData = await getLandingPageDataForPage();
-
-  return (
-    <Layout
-      title={landingPageData.seoData.title}
-      description={landingPageData.seoData.description}
-      theme={landingPageData.themeData}
-      seoData={landingPageData.seoData}
-      landingPageData={landingPageData}
-    >
-      <div className="animate-fade-in-up">
-        <Navbar />
-        <main>
-          {landingPageData.content.hero && (
-            <HeroSection />
-          )}
-
-          {landingPageData.content.serviceHighlights && (
-            <ServiceHighlightsSection />
-          )}
-
-          {landingPageData.content.about && (
-            <AboutSection />
-          )}
-
-          {landingPageData.content.companyDetails && (
-            <CompanyDetails />
-          )}
-{landingPageData.content.ctaSection && (
-            <CTASection />
-          )}
-          {landingPageData.content.services && (
-            <ServicesSection/>
-          )}
-
-         
-
-          {landingPageData.content.testimonials && (
-            <TestimonialsSection />
-          )}
-
-          
-
-          {landingPageData.content.gallery && (
-            <GallerySection />
-          )}
-
-          {landingPageData.content.businessOverview && (
-            <BusinessOverviewSection />
-          )}
-
-          {landingPageData.content.faq && (
-            <FAQSection />
-          )}
-
-          {landingPageData.businessData.serviceAreas &&
-            landingPageData.businessData.serviceAreas.length > 0 && (
-              <ServiceAreasSection />
-            )}
-
-          <FooterSection />
-        </main>
-      </div>
-    </Layout>
-  );
+export default function Home() {
+  return <HomeClient />;
 }

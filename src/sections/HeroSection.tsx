@@ -207,8 +207,8 @@ export default function HeroSection({
           <div className="grid lg:grid-cols-12 h-screen">
             
             {/* Content Side - Left */}
-            <div className="lg:col-span-5 flex items-center justify-center px-8 lg:px-16 relative">
-              <div className="max-w-xl space-y-8">
+            <div className="lg:col-span-5 flex items-center justify-center px-8 lg:px-16 relative pt-20">
+              <div className="max-w-xl space-y-6">
                 
                 {/* Royal Title */}
                 <div className="space-y-4">

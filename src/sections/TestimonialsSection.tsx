@@ -1,14 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
-
-interface Testimonial {
-  name: string;
-  role: string;
-  text: string;
-  company: string;
-}
 
 export default function TestimonialsSection() {
   const landing = useLandingPageData();
@@ -24,8 +17,12 @@ export default function TestimonialsSection() {
   const secondaryColor = resolvedTheme?.secondaryColor || 'var(--color-secondary)';
   const backgroundGradient = `linear-gradient(210deg, ${primaryColor}, ${secondaryColor})`;
 
-  const next = () => setIndex((i) => (i + 1) % Math.max(resolvedTestimonials.length, 1));
-  const prev = () => setIndex((i) => (i - 1 + resolvedTestimonials.length) % Math.max(resolvedTestimonials.length, 1));
+  const next = useCallback(() => {
+    setIndex((i) => (i + 1) % Math.max(resolvedTestimonials.length, 1));
+  }, [resolvedTestimonials.length]);
+  const prev = useCallback(() => {
+    setIndex((i) => (i - 1 + resolvedTestimonials.length) % Math.max(resolvedTestimonials.length, 1));
+  }, [resolvedTestimonials.length]);
 
   useEffect(() => {
     if (paused) {
@@ -42,7 +39,7 @@ export default function TestimonialsSection() {
         intervalRef.current = null;
       }
     };
-  }, [paused, resolvedTestimonials.length]);
+  }, [paused, resolvedTestimonials.length, next]);
 
   const t = resolvedTestimonials[index] || { name: '', role: '', text: '', company: '' };
 

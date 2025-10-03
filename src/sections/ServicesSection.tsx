@@ -1,18 +1,9 @@
 "use client";
 
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { Image as ImageType } from "@/types/template";
 import Image from "next/image";
 import Link from "next/link";
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
-
-interface Service {
-  name: string;
-  description: string;
-  price: string;
-  features: string[];
-  cta?: { href: string; label: string };
-}
 
 export default function ServicesSection() {
   const landingPageData = useLandingPageData();

@@ -8,17 +8,6 @@ import {
 import { useState } from "react";
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
 
-interface Schedule {
-  day: string;
-  periods?: Array<{
-    open: string;
-    close?: string;
-  }>;
-}
-
-interface BusinessHours {
-  schedule?: Schedule[];
-}
 
 export default function BusinessOverviewSection() {
   const landingPageData = useLandingPageData();

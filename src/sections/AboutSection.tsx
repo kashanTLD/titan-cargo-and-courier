@@ -85,7 +85,6 @@ export default function AboutSection({
   // Theme colors with fallbacks
   const primaryColor = resolvedTheme?.primaryColor || "#000000";
   const secondaryColor = resolvedTheme?.secondaryColor || "#666666";
-  const accentColor = resolvedTheme?.accentColor || primaryColor;
 
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);

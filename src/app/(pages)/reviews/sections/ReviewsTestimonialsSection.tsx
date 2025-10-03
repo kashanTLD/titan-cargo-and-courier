@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
-import type { TestimonialsContent, Testimonial } from "@/types/template";
+import type { Testimonial } from "@/types/template";
 
 // Reviews-specific testimonials section with a distinct, clean card grid design
 // Different from the root `src/sections/TestimonialsSection.tsx` which uses a

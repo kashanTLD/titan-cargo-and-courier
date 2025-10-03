@@ -17,7 +17,6 @@ interface CompanyDetailsProps {
 
 export default function CompanyDetails({ data, images, theme }: CompanyDetailsProps) {
   const landing = useLandingPageData();
-  const resolvedTheme = theme || landing?.themeData;
   const resolvedImages = images || landing?.images;
   const resolvedData = data || landing?.content?.companyDetails;
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.3 });
