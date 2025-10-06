@@ -17,21 +17,15 @@ const CTASection: React.FC<CTASectionProps> = ({ data, theme, images }) => {
   const resolvedTheme = theme || landing?.themeData;
   const resolvedImages = images || landing?.images;
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [scrollY, setScrollY] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   const sectionRef = useRef<HTMLElement>(null);
   const { ref: headingRef, isVisible: headingVisible } = useScrollAnimation<HTMLHeadingElement>({ threshold: 0.1 });
   const { ref: descriptionRef, isVisible: descriptionVisible } = useScrollAnimation<HTMLParagraphElement>({ threshold: 0.1 });
   const { ref: ctaButtonRef, isVisible: ctaButtonVisible } = useScrollAnimation<HTMLAnchorElement>({ threshold: 0.1 });
 
-  const primaryColor = resolvedTheme?.primaryColor || '#fff';
-  const secondaryColor = resolvedTheme?.secondaryColor || '#fff';
   const ctaImage = resolvedImages?.find(img => img.slotName === 'cta-image-1')?.imageUrl || 'https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg';
 
   useEffect(() => {
-    setIsLoaded(true);
-
     let rafId = 0;
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -43,21 +37,11 @@ const CTASection: React.FC<CTASectionProps> = ({ data, theme, images }) => {
       });
     };
 
-    const handleScroll = () => {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        setScrollY(window.scrollY || window.pageYOffset || 0);
-      });
-    };
-
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    handleScroll();
+    // Removed scroll listener as scrollY state was unused
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('scroll', handleScroll as EventListener);
       cancelAnimationFrame(rafId);
     };
   }, []);

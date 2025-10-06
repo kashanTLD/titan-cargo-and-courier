@@ -8,9 +8,21 @@ export default function ContactInfoAltSection() {
   const theme = landing?.themeData;
   const primary = theme?.primaryColor || "#0f172a";
   const secondary = theme?.secondaryColor || "#334155";
+  const contact = landing?.content?.contact;
+  const business = landing?.businessData;
+  const title = contact?.title ?? "";
+  const description = contact?.description ?? "";
+  const addressParts = [
+    business?.address?.street,
+    [business?.address?.city, business?.address?.state].filter(Boolean).join(", "),
+    business?.address?.zipCode,
+  ].filter(Boolean);
+  const address = addressParts.join("\n");
+  const email = business?.email ?? "";
+  const phone = business?.phone ?? "";
 
   return (
-    <section className="relative py-16 bg-slate-900 text-slate-100">
+    <section className="relative py-16 bg-slate-900 text-slate-100 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
         <div
           className="absolute -top-20 -left-20 h-72 w-72 rounded-full blur-3xl opacity-25"
@@ -23,14 +35,16 @@ export default function ContactInfoAltSection() {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-            Our Coordinates
-          </h2>
-          <p className="mt-3 text-slate-300 max-w-2xl mx-auto">
-            Multiple ways to reach us. Choose what works best for you.
-          </p>
-        </div>
+        {(title || description) && (
+          <div className="mb-10 text-center">
+            {title && (
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">{title}</h2>
+            )}
+            {description && (
+              <p className="mt-3 text-slate-300 max-w-2xl mx-auto">{description}</p>
+            )}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div
@@ -46,9 +60,9 @@ export default function ContactInfoAltSection() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold">Address</h3>
-            <p className="mt-2 text-sm text-slate-300">
-              123 Titan Way, Suite 500, San Jose, CA 95110
-            </p>
+            {address ? (
+              <p className="mt-2 text-sm text-slate-300 whitespace-pre-line">{address}</p>
+            ) : null}
           </div>
 
           <div
@@ -64,9 +78,9 @@ export default function ContactInfoAltSection() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold">Email</h3>
-            <p className="mt-2 text-sm text-slate-300">
-              support@titancargo.com
-            </p>
+            {email ? (
+              <p className="mt-2 text-sm text-slate-300">{email}</p>
+            ) : null}
           </div>
 
           <div
@@ -82,12 +96,13 @@ export default function ContactInfoAltSection() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold">Phone</h3>
-            <p className="mt-2 text-sm text-slate-300">
-              (408) 555-0133
-            </p>
+            {phone ? (
+              <p className="mt-2 text-sm text-slate-300">{phone}</p>
+            ) : null}
           </div>
         </div>
       </div>
     </section>
   );
 }
+

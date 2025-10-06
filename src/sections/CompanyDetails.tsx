@@ -145,7 +145,7 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <section 
-        className="relative overflow-hidden py-24 bg-white"
+        className="relative overflow-hidden py-10 bg-white"
         style={{
           '--theme-primary-color': theme?.primaryColor,
           '--theme-secondary-color': theme?.secondaryColor,
@@ -211,7 +211,7 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
             </div>
             {resolvedData.description && (
               <p 
-                className={`max-w-2xl mx-auto text-gray-600 text-base md:text-lg leading-relaxed tracking-wide normal-case transition-all duration-1200 delay-300 ${
+                className={`max-w-7xl mx-auto text-gray-600 text-base md:text-lg leading-relaxed tracking-wide normal-case transition-all duration-1200 delay-300 ${
                   headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
@@ -219,9 +219,9 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
               </p>
             )}
           </div>
-
+          
           {/* Card grid (large devices) with hover emphasis */}
-          <div className="hidden lg:block mt-6">
+          <div className="mt-6">
             <div className="cards-grid">
               {resolvedData.sections.slice(0, 3).map((section, i) => (
                 <div

@@ -1,6 +1,37 @@
-import React from "react";
+"use client";
 
-export default function MapAltSection() {
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+// Configure default Leaflet marker icons on client only
+function useConfigureLeafletIcons() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl:
+        "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+      iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+      shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+    });
+  }, []);
+}
+
+type MapAltSectionProps = {
+  lat?: number;
+  lng?: number;
+  zoom?: number;
+  markerLabel?: string;
+};
+
+export default function MapAltSection({
+  lat = 39.9833,
+  lng = -75.2300,
+  zoom = 13,
+  markerLabel = "Titan Cargo & Courier",
+}: MapAltSectionProps) {
+  useConfigureLeafletIcons();
   return (
     <section className="relative py-16 bg-slate-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,16 +50,26 @@ export default function MapAltSection() {
           </div>
 
           <div className="relative z-10 aspect-[16/9] w-full">
-            {/* Replace with your actual map embed if available */}
-            <iframe
-              title="Titan Cargo & Courier Location"
+            <MapContainer
+              center={[lat, lng]}
+              zoom={zoom}
+              scrollWheelZoom={false}
               className="h-full w-full"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3174.781932640246!2d-121.894955!3d37.338208!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fccb0a4a9%3A0x2!2sSan%20Jose%2C%20CA!5e0!3m2!1sen!2sus!4v1680000000000"
-              style={{ border: 0 }}
-              allowFullScreen
-            />
+              style={{ height: "100%", width: "100%" }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={[lat, lng]}>
+                <Popup>
+                  <div className="text-sm">
+                    <div className="font-semibold">{markerLabel}</div>
+                    <div className="text-slate-600">{lat.toFixed(4)}, {lng.toFixed(4)}</div>
+                  </div>
+                </Popup>
+              </Marker>
+            </MapContainer>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">

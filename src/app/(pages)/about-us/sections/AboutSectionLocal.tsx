@@ -27,31 +27,17 @@ export default function AboutSectionLocal() {
 
   return (
     <section id="about" className="py-20 bg-white">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col gap-10">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div>
-            <span className="inline-block rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: `${primary}1A`, color: primary }}>
-              About Us
-            </span>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-              {title}
+            Who We Are? Professional & Local Courier OR Cargo Moving Contractor
             </h2>
             <p className="mt-4 text-slate-600 leading-relaxed">
-              {description}
+            Titan Cargo and Courier is your premier professional & local courier and cargo moving contractor dedicated to excellence. We are a trusted Philadelphia-based company specializing in seamless residential, commercial, and freight transport solutions. Our skilled team provides reliable logistics with an unwavering customer-centric approach, ensuring every delivery and move is handled with maximum care and efficiency, all at affordable rates.
             </p>
 
-            {features.length ? (
-              <ul className="mt-6 space-y-3">
-                {features.map((f: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <span className="mt-1 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full text-white text-xs" style={{ background: primary }}>
-                      ✓
-                    </span>
-                    <span className="text-slate-700">{f}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+          
 
             
           </div>
@@ -60,26 +46,41 @@ export default function AboutSectionLocal() {
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2 overflow-hidden rounded-xl border border-slate-200">
                 {images[0]?.imageUrl ? (
-                  <Image src={images[0].imageUrl} alt={images[0].slotName} width={1000} height={700} className="h-72 w-full object-cover" />
+                  <Image src={images[0].imageUrl} alt={images[0].slotName} width={1000} height={700} className="h-[500px] w-full object-cover" />
                 ) : (
-                  <div className="h-72 w-full bg-slate-100" />
+                  <div className="h-[500px] w-full bg-slate-100" />
                 )}
               </div>
-              <div className="overflow-hidden rounded-xl border border-slate-200">
-                {images[1]?.imageUrl ? (
-                  <Image src={images[1].imageUrl} alt={images[1].slotName} width={500} height={400} className="h-40 w-full object-cover" />
-                ) : (
-                  <div className="h-40 w-full bg-slate-100" />
-                )}
-              </div>
-              <div className="overflow-hidden rounded-xl border border-slate-200">
-                {images[2]?.imageUrl ? (
-                  <Image src={images[2].imageUrl} alt={images[2].slotName} width={500} height={400} className="h-40 w-full object-cover" />
-                ) : (
-                  <div className="h-40 w-full bg-slate-100" />
-                )}
-              </div>
+             
             </div>
+          </div>
+        </div>
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+        
+
+          <div className="relative h-full">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2 overflow-hidden rounded-xl border border-slate-200">
+                {images[1]?.imageUrl ? (
+                  <Image src={images[1].imageUrl} alt={images[1].slotName} width={1000} height={700} className="h-[500px] w-full object-cover" />
+                ) : (
+                  <div className="h-[500px] w-full bg-slate-100" />
+                )}
+              </div>
+             
+            </div>
+          </div>
+          <div>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            Why Choose Titan Cargo and Courier Contractor For Your Residential or Commercial Buildings Material Moving Contractor?
+            </h2>
+            <p className="mt-4 text-slate-600 leading-relaxed">
+            When it comes to specialized logistics, choose the Titan Cargo and Courier Contractor. We are the skilled moving contractor providing reliable service for all residential or commercial buildings material moving. Our unique expertise handles bulky or sensitive construction freight with safety and precision. We offer affordable solutions and a dedicated customer-centric approach to keep your project on schedule and budget.
+            </p>
+
+          
+
+            
           </div>
         </div>
       </div>

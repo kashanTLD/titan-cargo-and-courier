@@ -109,6 +109,20 @@ export default function Navbar({
     }
   }, [resolvedTheme]);
 
+  // Prevent background scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      const originalHeight = document.body.style.height;
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.height = originalHeight;
+      };
+    }
+  }, [isOpen]);
+
   // Cleanup any pending close timeout on unmount
   useEffect(() => {
     return () => {
@@ -149,18 +163,23 @@ export default function Navbar({
 
   return (
     <>
-      {/* Minimal Line Accent Navbar */}
-      <nav className={`minimal-navbar transition-all duration-300 ${
-        isScrolled ? 'minimal-navbar-scrolled' : ''
-      } ${!isVisible ? '-translate-y-full' : 'translate-y-0'}`} style={{ 
-        background: `linear-gradient(135deg, ${withAlpha(resolvedTheme?.secondaryColor, 0.8)} 0%, ${withAlpha(resolvedTheme?.primaryColor, 0.8)} 80%, ${withAlpha(resolvedTheme?.secondaryColor, 0.8)} 100%)`,
-        backdropFilter: 'blur(8px)',
-        boxShadow: `0 4px 20px ${withAlpha(resolvedTheme?.primaryColor, 0.25)}`
-      }}>
-        <div className="minimal-navbar-container">
+      {/* Navbar - Tailwind styles inline */}
+      <nav
+        className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 border-b-2 ${
+          !isVisible ? '-translate-y-full' : 'translate-y-0'
+        } ${isScrolled ? 'py-1' : 'py-2'}`}
+        style={{
+          background: `linear-gradient(135deg, ${withAlpha(resolvedTheme?.secondaryColor, 0.8)} 0%, ${withAlpha(resolvedTheme?.primaryColor, 0.8)} 80%, ${withAlpha(resolvedTheme?.secondaryColor, 0.8)} 100%)`,
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          borderColor: resolvedTheme?.primaryColor,
+          boxShadow: `0 4px 20px ${withAlpha(resolvedTheme?.primaryColor, 0.25)}`
+        }}
+      >
+        <div className="flex items-center justify-between w-full px-4 sm:px-6 lg:px-16 gap-6">
           {/* Left Logo */}
-          <div className="minimal-logo-container">
-            <Link href="/" replace className="minimal-logo-link" aria-label={resolvedBusinessName}>
+          <div className="shrink-0">
+            <Link href="/" replace className="inline-flex items-center" aria-label={resolvedBusinessName}>
               <Image alt={`${resolvedBusinessName} logo`} src={'/logo.png' }  width={50} height={50} />
             </Link>
           </div>
@@ -176,12 +195,12 @@ export default function Navbar({
                     onMouseEnter={openServices}
                     onMouseLeave={scheduleCloseServices}
                   >
-                    <Link href="/services" replace className="minimal-nav-link group inline-flex items-center gap-1">
+                    <Link href="/services" replace className="group inline-flex items-center gap-1 text-white font-medium text-sm">
                       <span className="text-white">Services</span>
                       <svg className={`w-3 h-3 transition-transform ${servicesOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                       </svg>
-                      <div className="minimal-nav-underline" style={{ backgroundColor: resolvedTheme?.primaryColor }}></div>
+                      <div className="absolute left-0 -bottom-0.5 h-0.5 w-0 group-hover:w-full transition-all" style={{ backgroundColor: resolvedTheme?.primaryColor }}></div>
                     </Link>
                     {servicesOpen && services.length > 0 && (
                       <div
@@ -213,10 +232,10 @@ export default function Navbar({
                   key={item.href}
                   href={item.href}
                   replace
-                  className="minimal-nav-link group"
+                  className="group relative text-white font-medium text-sm"
                 >
                   <span className="text-white">{item.label}</span>
-                  <div className="minimal-nav-underline" style={{ backgroundColor: resolvedTheme?.primaryColor }}></div>
+                  <div className="absolute left-0 -bottom-0.5 h-0.5 w-0 group-hover:w-full transition-all" style={{ backgroundColor: resolvedTheme?.primaryColor }}></div>
                 </Link>
               );
             })}
@@ -226,7 +245,7 @@ export default function Navbar({
           <div className="hidden lg:flex items-center">
             <Link
               href={resolvedPhone ? `tel:${resolvedPhone}` : "#"}
-              className="minimal-cta-button"
+              className="relative inline-flex items-center px-3 py-2 rounded-md shadow"
               style={{
                 background: `linear-gradient(135deg, ${resolvedTheme?.primaryColor} 0%, ${resolvedTheme?.secondaryColor} 100%)`,
                 color: 'white',
@@ -245,62 +264,60 @@ export default function Navbar({
           <div className="lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="minimal-mobile-button"
+              className="p-2 rounded-md bg-white/10 border border-white/30 backdrop-blur hover:bg-white/20 transition"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
             >
-              <div className={`minimal-hamburger ${isOpen ? 'minimal-hamburger-open' : ''}`}>
-                <span style={{ backgroundColor: "white" }}></span>
-                <span style={{ backgroundColor: "white" }}></span>
-                <span style={{ backgroundColor: "white" }}></span>
-              </div>
+              {isOpen ? (
+                // Close (X) icon
+                <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                // Hamburger icon
+                <div className="flex flex-col justify-between w-6 h-4">
+                  <span className="block h-0.5 w-full bg-white"></span>
+                  <span className="block h-0.5 w-full bg-white"></span>
+                  <span className="block h-0.5 w-full bg-white"></span>
+                </div>
+              )}
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Luxury Full-Screen Mobile Menu */}
+      {/* Mobile Full-Screen Menu */}
       {isOpen && (
-        <div 
-          className="luxury-mobile-overlay"
-          style={{
-            background: `linear-gradient(135deg, ${withAlpha(resolvedTheme?.primaryColor, 0.08)} 0%, ${withAlpha(resolvedTheme?.secondaryColor, 0.08)} 25%, ${withAlpha(resolvedTheme?.primaryColor, 0.06)} 50%, ${withAlpha(resolvedTheme?.secondaryColor, 0.06)} 75%, ${withAlpha(resolvedTheme?.primaryColor, 0.08)} 100%)`
-          }}
-        >
-          <div className="luxury-mobile-content">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-lg">
+          {/* Overlay Close Button */}
+          <button
+            aria-label="Close menu"
+            onClick={() => setIsOpen(false)}
+            className="absolute top-4 right-4 p-2 rounded-md bg-white/10 border border-white/30 hover:bg-white/20 transition"
+          >
+            <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="relative w-full max-w-xl px-6 py-8 text-center">
             {/* Mobile Logo */}
-            <div className="luxury-mobile-logo">
-              <Link href="/" replace onClick={() => setIsOpen(false)} className="flex items-center gap-4">
-                <Image alt="logo" src={'/logo.png' }  width={40} height={40} />
-              </Link>
-            </div>
+            <div className="mb-8"><Link href="/" replace onClick={() => setIsOpen(false)} className="inline-flex items-center gap-3"><Image alt="logo" src={'/logo.png' }  width={40} height={40} /></Link></div>
 
             {/* Mobile Navigation */}
-            <nav className="luxury-mobile-nav">
+            <nav className="flex flex-col gap-4 mb-8">
               {navItems.map((item, index) => {
                 if (item.label === 'Services') {
                   return (
                     <div key={item.label} className="w-full" style={{ animationDelay: `${index * 150}ms` }}>
                       <button
                         type="button"
-                        className="luxury-mobile-link group w-full flex items-center justify-between"
+                        className="relative w-full flex items-center gap-1 justify-center px-5 py-4 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/15 transition"
                         onClick={() => setMobileServicesOpen((v) => !v)}
                       >
-                        <span className="luxury-mobile-link-text">Services</span>
+                        <span className="text-white">Services</span>
                         <svg className={`w-5 h-5 transition-transform ${mobileServicesOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                         </svg>
-                        <div className="luxury-mobile-link-shimmer"></div>
                       </button>
-                      {/* Direct link to Services page */}
-                      <Link
-                        key="services-root"
-                        onClick={() => setIsOpen(false)}
-                        href="/services"
-                        replace
-                        className="block pl-4 pr-2 py-2 text-white/90 hover:text-white"
-                        style={{ animationDelay: `${(index + 1) * 120}ms` }}
-                      >
-                        View all services
-                      </Link>
                       {mobileServicesOpen && services.length > 0 && (
                         <div className="mt-2 ml-4 border-l border-white/20">
                           {services.map((svc, i) => (
@@ -326,49 +343,33 @@ export default function Navbar({
                     onClick={() => setIsOpen(false)}
                     href={item.href}
                     replace
-                    className="luxury-mobile-link group"
+                    className="relative flex items-center justify-center px-5 py-4 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/15 transition"
                     style={{ animationDelay: `${index * 150}ms` }}
                   >
-                    <span className="luxury-mobile-link-text">{item.label}</span>
-                    <div className="luxury-mobile-link-shimmer"></div>
+                    <span className="text-white">{item.label}</span>
                   </Link>
                 );
               })}
             </nav>
 
             {/* Mobile CTA */}
-            <div className="luxury-mobile-cta-container">
+            <div>
               <Link
                 onClick={() => setIsOpen(false)}
                 href={resolvedPhone ? `tel:${resolvedPhone}` : "#"}
-                className="luxury-mobile-cta-button group"
+                className="inline-flex items-center px-6 py-4 rounded-2xl text-white shadow-lg transition"
                 style={{
                   background: `linear-gradient(135deg, ${resolvedTheme?.primaryColor} 0%, ${resolvedTheme?.secondaryColor} 100%)`
                 }}
               >
-                <span className="luxury-mobile-cta-text">Call Us Now</span>
-                <div className="luxury-mobile-cta-shimmer"></div>
+                <span className="font-medium tracking-wide">Call Us Now</span>
                 <svg className="w-6 h-6 ml-3 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </Link>
             </div>
 
-            {/* Decorative Elements */}
-            <div className="luxury-mobile-decorations">
-              <div 
-                className="luxury-mobile-decoration luxury-mobile-decoration-1"
-                style={{ backgroundColor: withAlpha(resolvedTheme?.primaryColor, 0.125) }}
-              ></div>
-              <div 
-                className="luxury-mobile-decoration luxury-mobile-decoration-2"
-                style={{ backgroundColor: withAlpha(resolvedTheme?.secondaryColor, 0.125) }}
-              ></div>
-              <div 
-                className="luxury-mobile-decoration luxury-mobile-decoration-3"
-                style={{ backgroundColor: withAlpha(resolvedTheme?.primaryColor, 0.125) }}
-              ></div>
-            </div>
+            {/* Decorative Elements removed to keep styles local and simple */}
           </div>
         </div>
       )}

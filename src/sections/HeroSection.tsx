@@ -127,7 +127,6 @@ export default function HeroSection({
       font-weight: 400;
       letter-spacing: 0.05em;
       color: #666;
-      text-transform: uppercase;
     }
 
     .geometric-3d {
@@ -200,11 +199,11 @@ export default function HeroSection({
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <section className="relative md:overflow-hidden min-h-screen bg-white">
+      <section className="relative md:overflow-hidden md:min-h-screen bg-white">
 
         {/* Split Screen Layout */}
-        <div className="relative z-10 min-h-screen">
-          <div className="grid lg:grid-cols-12 h-screen">
+        <div className="relative z-10 md:min-h-screen">
+          <div className="grid lg:grid-cols-12 md:h-screen gap-5">
             
             {/* Content Side - Left */}
             <div className="lg:col-span-5 flex items-center justify-center px-8 lg:px-16 relative pt-20">
@@ -297,11 +296,11 @@ export default function HeroSection({
             </div>
 
             {/* Images Side - Right */}
-            <div className="lg:col-span-7 relative overflow-hidden">
+            <div className="lg:col-span-7 relative overflow-hidden h-[500px] md:h-full">
               
               {/* Primary Image */}
               <div 
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 w-full h-full px-5 md:px-0"
               >
                 <div 
                   className={`w-full h-full image-morph transition-all duration-1000 ${

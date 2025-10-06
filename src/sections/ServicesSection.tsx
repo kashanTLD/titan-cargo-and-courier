@@ -46,6 +46,17 @@ export default function ServicesSection() {
               >
                 {description}
               </p>
+              <div className="">
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center px-5 py-3 rounded-full text-white font-medium shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 focus:outline-none"
+                style={{
+                  backgroundImage: `linear-gradient(90deg, ${theme?.primaryColor || '#7c4a35'}, ${theme?.secondaryColor || '#b07b62'})`,
+                }}
+              >
+                View all services
+              </Link>
+          </div>
             </div>
           </aside>
 
@@ -101,17 +112,7 @@ export default function ServicesSection() {
             </div>
           </div>
         </div>
-            <div className="text-center mt-10 md:mt-20">
-              <Link
-                href="/services"
-                className="inline-flex items-center justify-center px-5 py-3 rounded-full text-white font-medium shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 focus:outline-none"
-                style={{
-                  backgroundImage: `linear-gradient(90deg, ${theme?.primaryColor || '#7c4a35'}, ${theme?.secondaryColor || '#b07b62'})`,
-                }}
-              >
-                View all services
-              </Link>
-          </div>
+           
       </div>
     </section>
   );

@@ -884,8 +884,17 @@ h1, h2, h3 {
   gap: 1.5rem;
 }
 
-.minimal-logo-container {
-  flex-shrink: 0;
+/* Tighter side padding on tablets and mobile */
+@media (max-width: 1024px) {
+  .minimal-navbar-container {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .minimal-navbar-container {
+    padding: 0 16px;
+  }
 }
 
 .minimal-logo-link {

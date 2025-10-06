@@ -2,13 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
-
-interface SocialLink {
-  platform: string;
-  url: string;
-}
 
 // Types are provided by context; local interface declarations removed to avoid unused warnings.
 
@@ -59,7 +54,7 @@ export default function FooterSection() {
     <footer
       ref={footerRef}
       id="contact"
-      className="py-16 sm:py-20 md:py-24 relative overflow-hidden"
+      className="pb-4 pt-16 sm:pt-20 md:pt-24 relative overflow-hidden"
       style={{ backgroundColor: resolvedTheme?.secondaryColor || '#1f2937' }}
     >
       {/* Subtle background gradients */}
@@ -272,19 +267,19 @@ export default function FooterSection() {
           </div>
         </div>
 
+      </div>
         {/* Copyright */}
-        <div className="border-t border-gray-700 pt-8">
+        <div className="pt-8 px-5">
           <div 
             className={`text-center transition-all duration-1000 delay-1000 ${
               footerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
           >
             <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-            2025 Titan Cargo and Courier LLC. All Rights Reserved. Build by <a href="https://usbrandbooster.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">US Brand Booster LLC</a>
+            2025 © Titan Cargo and Courier LLC. All Rights Reserved. Build with love ❤️ by <a href="https://usbrandbooster.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">US Brand Booster LLC</a>
             </p>
           </div>
         </div>
-      </div>
     </footer>
   );
 }

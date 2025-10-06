@@ -144,7 +144,6 @@ export default function ServiceHighlightsSection() {
       font-weight: 400;
       letter-spacing: 0.08em;
       color: #666;
-      text-transform: uppercase;
     }
 
     /* Card styling with royal aesthetics */
@@ -508,7 +507,7 @@ export default function ServiceHighlightsSection() {
               return (
                 <div
                   key={`service-${index}`}
-                  className={`fade-slide-animation transition-all duration-1000 ${
+                  className={`fade-slide-animation transition-all duration-1000 md:h-[350px] ${
                     visibleItems.includes(index)
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-12"
@@ -518,7 +517,7 @@ export default function ServiceHighlightsSection() {
                     transform: `translateY(${scrollY * 0.02}px)`
                   }}
                 >
-                  <div className="royal-service-card text-center group">
+                  <div className="royal-service-card text-center group h-full">
                     <div className="shimmer-overlay" />
                     
                     {/* 3D Royal Number Display */}
@@ -592,7 +591,7 @@ export default function ServiceHighlightsSection() {
           <div className="text-center mt-24">
             <div className="inline-flex items-center space-x-8 px-8 py-6 bg-white/80 backdrop-blur-20 border border-gray-100/50 rounded-full shadow-lg">
               <div 
-                className="w-20 h-px floating-element opacity-60"
+                className="md:w-20 h-px floating-element opacity-60"
                 style={{
                   background: `linear-gradient(90deg, transparent, ${resolvedTheme?.primaryColor}, transparent)`,
                   animationDelay: '0s'
@@ -600,14 +599,14 @@ export default function ServiceHighlightsSection() {
               />
               <div className="flex items-center space-x-4">
                 <div 
-                  className="w-2 h-2 rounded-full floating-element"
+                  className="hidden md:block w-2 h-2 rounded-full floating-element"
                   style={{ 
                     backgroundColor: resolvedTheme?.primaryColor,
                     animationDelay: '1s'
                   }}
                 />
                 <span 
-                  className="text-lg font-light tracking-wide"
+                  className="md:text-lg font-light md:tracking-wide"
                   style={{ 
                     background: `linear-gradient(135deg, ${resolvedTheme?.primaryColor}, ${resolvedTheme?.secondaryColor})`,
                     WebkitBackgroundClip: 'text',
@@ -618,7 +617,7 @@ export default function ServiceHighlightsSection() {
                   Excellence in Every Detail
                 </span>
                 <div 
-                  className="w-2 h-2 rounded-full floating-element"
+                  className="hidden md:block w-2 h-2 rounded-full floating-element"
                   style={{ 
                     backgroundColor: resolvedTheme?.secondaryColor,
                     animationDelay: '2s'
@@ -626,7 +625,7 @@ export default function ServiceHighlightsSection() {
                 />
               </div>
               <div 
-                className="w-20 h-px floating-element opacity-60"
+                className="hidden md:block w-20 h-px floating-element opacity-60"
                 style={{
                   background: `linear-gradient(90deg, transparent, ${resolvedTheme?.secondaryColor}, transparent)`,
                   animationDelay: '0.5s'

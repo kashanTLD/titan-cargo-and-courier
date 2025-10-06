@@ -101,6 +101,9 @@ export default function AboutSection({
     (img) => img.slotName.includes("about") || img.category === "about"
   );
 
+  // Select only the specific image: about-image-1
+  const aboutImageOne = aboutImages.find((img) => img.slotName === "about-image-1");
+
   const styles = `
     @keyframes royal-float {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -248,7 +251,7 @@ export default function AboutSection({
 
       <section
         id="about"
-        className="relative overflow-hidden py-24 bg-white"
+        className="relative overflow-hidden py-24 bg-[#efefef]"
         style={
           {
             "--theme-primary-color": primaryColor,
@@ -322,7 +325,7 @@ export default function AboutSection({
               
               <div>
                 {/* Header */}
-            <div className="text-center mb-20 space-y-8">
+            <div className=" mb-20 space-y-8">
               {/* Floating Icon */}
               <div
                 className={`inline-block transition-all duration-1200 ${
@@ -384,7 +387,8 @@ export default function AboutSection({
               {/* Description */}
               <p
                 ref={descRef}
-                className={`royal-about-description fade-slide-animation max-w-3xl mx-auto transition-all duration-1200 delay-400 ${
+                className={`royal-about-description 
+                   fade-slide-animation max-w-3xl mx-auto transition-all duration-1200 delay-400 ${
                   descVisible
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-8"
@@ -462,72 +466,15 @@ export default function AboutSection({
                 style={{ transform: `translateY(${scrollY * 0.02}px)` }}
               >
                 <div className="relative w-full h-full">
-                  {aboutImages.length > 0 ? (
-                    <div className="relative h-[600px] sm:h-[700px] lg:h-[800px]">
-                      {/* Main Image */}
-                      <div className="absolute top-0 left-0 w-2/3 h-2/3 z-10">
-                        <div className="royal-image-container royal-image-primary group">
-                          <Image
-                            src={aboutImages[0].imageUrl}
-                            alt={`Featured: ${aboutImages[0].slotName}`}
-                            width={800}
-                            height={600}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/20"></div>
-                        </div>
-                      </div>
-
-                      {/* Secondary */}
-                      {aboutImages[1] && (
-                        <div className="absolute top-0 right-0 w-1/3 h-1/2 z-20">
-                          <div className="royal-image-container royal-image-secondary group">
-                            <Image
-                              src={aboutImages[1].imageUrl}
-                              alt={`Secondary: ${aboutImages[1].slotName}`}
-                              width={400}
-                              height={300}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Third */}
-                      {aboutImages[2] && (
-                        <div className="absolute bottom-0 right-0 w-1/2 h-1/3 z-20">
-                          <div
-                            className="royal-image-container group"
-                            style={{
-                              clipPath:
-                                "polygon(15% 0, 100% 0, 100% 85%, 0 100%)",
-                            }}
-                          >
-                            <Image
-                              src={aboutImages[2].imageUrl}
-                              alt={`Tertiary: ${aboutImages[2].slotName}`}
-                              width={500}
-                              height={300}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Fourth */}
-                      {aboutImages[3] && (
-                        <div className="absolute bottom-8 left-1/4 w-1/3 h-1/3 z-30">
-                          <div className="royal-image-container group organic-shape overflow-hidden">
-                            <Image
-                              src={aboutImages[3].imageUrl}
-                              alt={`Extra: ${aboutImages[3].slotName}`}
-                              width={400}
-                              height={400}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                          </div>
-                        </div>
-                      )}
+                  {aboutImageOne ? (
+                    <div className="royal-image-container royal-image-primary">
+                      <Image
+                        src={aboutImageOne.imageUrl}
+                        alt={`Featured: ${aboutImageOne.slotName}`}
+                        width={800}
+                        height={600}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   ) : image ? (
                     <div className="royal-image-container royal-image-primary">

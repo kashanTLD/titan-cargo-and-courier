@@ -11,6 +11,8 @@ export default function MapSection() {
   const { ref: mapRef, isVisible: mapVisible } =
     useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
+    console.log(businessData.coordinates.latitude)
+
   return (
     <section className="py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
