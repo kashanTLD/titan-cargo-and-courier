@@ -54,7 +54,7 @@ export default function TestimonialsSection() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Heading */}
         <div className="text-center mb-10 md:mb-14">
-          <h2 className="hero-title hero-title-xl hero-gothic-title font-pirata uppercase animate-text-glow tracking-tight"
+          <h2 className="text-[clamp(2.5rem,6vw,4rem)] font-light leading-[1] tracking-[-0.03em] text-[#1a1a1a] font-serif font-pirata uppercase animate-text-glow"
             style={{ color: 'var(--color-white)' }}
           >
             {resolvedTitle}

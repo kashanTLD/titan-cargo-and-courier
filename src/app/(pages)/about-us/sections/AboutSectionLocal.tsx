@@ -19,11 +19,7 @@ export default function AboutSectionLocal() {
     [landing]
   );
 
-  const primary = theme?.primaryColor || "#0f172a";
-
-  const title = about.title ?? "";
-  const description = about.description ?? "";
-  const features: string[] = about.features ?? [];
+  // Note: computed values from theme/about are not used in this static copy block
 
   return (
     <section id="about" className="py-20 bg-white">
@@ -87,3 +83,4 @@ export default function AboutSectionLocal() {
     </section>
   );
 }
+

@@ -16,7 +16,7 @@ export default function ServicesAreas({ landingPageData }: Props) {
   return (
     <section id="service-areas" className="bg-white">
       <div className="mx-auto w-full md:max-w-[70vw] px-4 sm:px-6 py-12 md:py-16">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+        <h2 className="text-[clamp(2.5rem,6vw,4rem)] font-light leading-[1] tracking-[-0.03em] font-serif text-gray-900">
           Our Service Areas
         </h2>
         <p className="mt-3 text-gray-700 leading-relaxed">

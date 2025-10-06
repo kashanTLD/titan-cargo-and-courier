@@ -51,7 +51,7 @@ export default function ServiceAreasSection() {
           <div className="text-center mb-12">
             <h2 
               ref={titleRef}
-              className={`text-4xl md:text-5xl font-bold mb-8 transition-all duration-1000 ${
+              className={`text-[clamp(2.5rem,6vw,4rem)] font-light leading-[1] tracking-[-0.03em] font-serif mb-8 transition-all duration-1000 ${
                 titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
               style={{ 

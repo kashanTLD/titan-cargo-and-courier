@@ -3,13 +3,15 @@
 import Layout from "@/components/Layout";
 import Navbar from "@/components/Navbar";
 import FooterSection from "@/sections/FooterSection";
-import { ServicesCopySections, ServicesAreas } from "@/app/(pages)/services/[id]/sections";
+import CTASection from "@/sections/CTASection";
+import { ServiceDetails, ServicesAreas } from "@/app/(pages)/services/[id]/sections";
 import Banner from "@/components/Banner";
-import FAQSection from "@/sections/FAQSection";
+import ServicesFAQSection from "./sections/ServicesFAQSection";
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
 import { useParams } from "next/navigation";
-import Link from "next/link";
-
+import Breadcrumbs from "@/app/(pages)/services/[id]/components/Breadcrumbs";
+import RelatedServicesSection from "@/app/(pages)/services/[id]/components/RelatedServicesSection";
+import HowItWorksSection from "@/app/(pages)/services/[id]/components/HowItWorksSection";
 type UnknownService = {
   id?: unknown;
   title?: unknown;
@@ -48,7 +50,6 @@ export default function ServiceDetailPage() {
 
   const service: UnknownService | undefined = matchIndex >= 0 ? (services[matchIndex] as UnknownService) : undefined;
 
-  // Helper: brand and image
   const brandName = landingPageData.businessName || "Business";
   const bannerImg = matchIndex >= 0 ? (landingPageData.images || []).find((im) => im.slotName === `services-image-${matchIndex + 1}`) : undefined;
 
@@ -64,6 +65,53 @@ export default function ServiceDetailPage() {
     getNumber(rawPrice) ?? (typeof rawPrice === "string" && rawPrice.trim() !== "" && !Number.isNaN(Number(rawPrice)) ? Number(rawPrice) : null);
 
   const img = bannerImg;
+
+  // Try to find a matching detailed content item from content.servicesDetails
+  const detailsList: Array<{ title?: string; content?: { description?: string; sections?: Array<{ title?: string; text?: string }>; faqs?: string[] } }>
+    = Array.isArray(landingPageData.content?.servicesDetails?.servicesDetails)
+      ? (landingPageData.content.servicesDetails!.servicesDetails as Array<{ title?: string; content?: { description?: string; sections?: Array<{ title?: string; text?: string }>; faqs?: string[] } }>)
+      : [];
+
+  const currentSlug = toSlug(titleText || "");
+  // Matching strategy: exact slug match -> keyword match -> index fallback
+  const detailMatch = (() => {
+    // 1) Exact slug match or substring overlap
+    const exact = detailsList.find((d) => {
+      const ds = toSlug(String(d?.title || ""));
+      return ds === currentSlug || (ds && currentSlug && (ds.includes(currentSlug) || currentSlug.includes(ds)));
+    });
+    if (exact) return exact;
+
+    // 2) Keyword match heuristics
+    const slug = currentSlug;
+    const isCargo = /(cargo|courier|same-day|medical|furniture|appliance)/i.test(slug);
+    const isMoving = /(moving|mover|relocation|furniture)/i.test(slug);
+    if (isCargo || isMoving) {
+      const candidate = detailsList.find((d) => {
+        const t = String(d?.title || "").toLowerCase();
+        return isCargo ? t.includes("cargo") || t.includes("courier") : t.includes("moving");
+      });
+      if (candidate) return candidate;
+    }
+
+    // 3) Fallback by index alignment when available
+    if (matchIndex >= 0 && matchIndex < detailsList.length) {
+      return detailsList[matchIndex];
+    }
+    return undefined;
+  })();
+  const detailDescription: string | undefined = detailMatch?.content?.description || undefined;
+  const detailSections: Array<{ title: string; text: string }> = Array.isArray(detailMatch?.content?.sections)
+    ? (detailMatch!.content!.sections!.map((s) => ({ title: String(s?.title || ""), text: String(s?.text || "") })).filter((s) => s.title || s.text))
+    : [];
+
+  // Compute images for this service by prefix (moving-service-*, cargo-service-*)
+  const isMovingService = /(moving|mover|relocation)/i.test(currentSlug);
+  const isCargoService = /(cargo|courier|same-day|medical)/i.test(currentSlug);
+  const imagePrefix = isMovingService ? 'moving-service' : isCargoService ? 'cargo-service' : null;
+  const serviceImages = imagePrefix
+    ? (landingPageData.images || []).filter((im) => typeof im.slotName === 'string' && im.slotName.startsWith(`${imagePrefix}-`))
+    : [];
 
   // Build related services (exclude current)
   const related = services
@@ -94,18 +142,34 @@ export default function ServiceDetailPage() {
         phoneNumber={landingPageData.businessData?.phone}
       />
       <main>
-        <Banner title={titleText || `${brandName} Services`} image={img?.imageUrl} slotName={`services-image-${(matchIndex >= 0 ? matchIndex : 0) + 1}`} heightClassName="h-[45vh] md:h-[50vh]" />
-
+        {/* Banner + Breadcrumbs */}
+        <Banner
+          title={titleText || `${brandName} Services`}
+          image={img?.imageUrl}
+          slotName={`services-image-${(matchIndex >= 0 ? matchIndex : 0) + 1}`}
+          heightClassName="h-[45vh] md:h-[50vh]"
+        />
+        <Breadcrumbs theme={landingPageData.themeData} titleText={titleText} />
         {service ? (
-          <ServicesCopySections
+          <ServiceDetails
             landingPageData={landingPageData}
             title={titleText}
             description={descriptionText}
+            detailDescription={detailDescription}
             features={(() => {
               const v: unknown = (service as UnknownService)?.features;
-              return Array.isArray(v)
-                ? (v.filter((x): x is string => typeof x === "string"))
-                : [];
+              const arr = Array.isArray(v) ? v.filter((x): x is string => typeof x === "string").map((s) => s.trim()).filter(Boolean) : [];
+              // Dedupe case-insensitively
+              const seen = new Set<string>();
+              const deduped = arr.filter((item) => {
+                const key = item.toLowerCase();
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+              });
+              // Title Case simple
+              const titled = deduped.map((s) => s.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()));
+              return titled.slice(0, 12);
             })()}
             price={parsedPrice}
             cta={((): { href?: string; label?: string } | null => {
@@ -131,64 +195,22 @@ export default function ServiceDetailPage() {
             </div>
           </section>
         )}
-
         {/* Related Services */}
-        <section className="bg-gray-50">
-          <div className="mx-auto w-full md:max-w-[70vw] px-4 sm:px-6 py-12 md:py-16">
-            <h3 className="text-xl md:text-2xl font-semibold text-gray-900">Related services</h3>
-            {related.length > 0 ? (
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {related.map((r) => (
-                  <Link key={r.href} href={r.href} replace className="block rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md transition">
-                    <div className="h-28 w-full rounded-lg bg-gray-100" />
-                    <div className="mt-3 font-medium text-gray-900">{r.label}</div>
-                    <div className="text-sm text-gray-600">Learn more</div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="rounded-xl border border-gray-200 bg-white p-4">
-                    <div className="h-28 w-full rounded-lg bg-gray-100 animate-pulse" />
-                    <div className="mt-3 h-4 w-2/3 bg-gray-100 rounded animate-pulse" />
-                    <div className="mt-2 h-3 w-1/3 bg-gray-100 rounded animate-pulse" />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
-
+        <RelatedServicesSection related={related} />
         <ServicesAreas landingPageData={landingPageData} />
-
-        {/* Contact CTA */}
-        <section className="bg-white">
-          <div className="mx-auto w-full md:max-w-[70vw] px-4 sm:px-6 py-12 md:py-16">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 rounded-2xl border border-gray-200 bg-gray-50">
-              <div>
-                <h3 className="text-xl md:text-2xl font-semibold text-gray-900">Have questions about this service?</h3>
-                <p className="mt-1 text-gray-700">We're happy to help you choose the right option for your needs.</p>
-              </div>
-              <div>
-                <a
-                  href={landingPageData.businessData?.phone ? `tel:${landingPageData.businessData.phone}` : "#"}
-                  className="inline-flex items-center px-5 py-3 rounded-lg text-white font-medium"
-                  style={{ background: `linear-gradient(135deg, ${landingPageData.themeData?.primaryColor} 0%, ${landingPageData.themeData?.secondaryColor} 100%)` }}
-                >
-                  Call {brandName}
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <FAQSection />
+        {/* How it works: build steps from detailSections */}
+        <HowItWorksSection
+          detailSections={detailSections}
+          theme={landingPageData.themeData}
+          image={serviceImages.length > 2
+            ? { id: serviceImages[2].id, imageUrl: serviceImages[2].imageUrl, altText: serviceImages[2].altText, title: serviceImages[2].title }
+            : undefined}
+        />
+        {/* Full-width CTA Section */}
+        <CTASection />
+        <ServicesFAQSection />
         <FooterSection />
       </main>
     </Layout>
   );
 }
-
-
-

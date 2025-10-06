@@ -195,7 +195,7 @@ export default function CompanyDetails({ data, images, theme }: CompanyDetailsPr
           {/* Header Section (hero-aligned) */}
           <div ref={headerRef} className="text-center mb-20 space-y-6">
             <h2 
-              className={`royal-title transition-all duration-1200 ${
+              className={`text-[clamp(2.5rem,6vw,4rem)] font-light leading-[1] tracking-[-0.03em] text-[#1a1a1a] font-serif transition-all duration-1200 ${
                 headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
               }`}
             >

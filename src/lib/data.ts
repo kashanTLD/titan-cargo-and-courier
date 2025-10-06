@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { query } from "@/lib/db";
 import { fetchLandingPageForSSG } from "@/lib/database";
+import { servicesDetails as injectedServicesDetails } from "@/lib/servicesDetails";
 
 const getEnv = () => {
   const templateId = process.env.NEXT_PUBLIC_TEMPLATE_ID;
@@ -13,7 +14,16 @@ const getEnv = () => {
 
 export const getLandingPageData = cache(async () => {
   const { templateId, id } = getEnv();
-  return await fetchLandingPageForSSG(templateId, id);
+  const data = await fetchLandingPageForSSG(templateId, id);
+  if (!data) return data;
+  return {
+    ...data,
+    content: {
+      ...(data.content ?? {}),
+      // Override/merge with injected servicesDetails provided by the user
+      servicesDetails: injectedServicesDetails,
+    },
+  };
 });
 
 export const getServices = cache(async () => {

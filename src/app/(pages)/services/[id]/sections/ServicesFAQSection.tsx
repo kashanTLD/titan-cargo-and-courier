@@ -3,10 +3,86 @@
 import { useState, useEffect, useRef } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useLandingPageData } from '@/components/LandingPageDataProvider';
+import { useParams } from 'next/navigation';
 
-export default function FAQSection() {
+export default function ServicesFAQSection() {
   const landingPageData = useLandingPageData();
-  const { title, description, questions } = landingPageData.content.faq || {};
+  const { id } = useParams<{ id: string }>();
+
+  // Helpers
+  const toSlug = (str: string) =>
+    String(str || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '');
+
+  // Locate the current service (by numeric id or slug) to align FAQs
+  const services: unknown[] = Array.isArray(landingPageData.content?.services?.services)
+    ? (landingPageData.content.services.services as unknown[])
+    : [];
+  const matchIndex = services.findIndex((s: unknown, idx: number) => {
+    const obj = (s || {}) as Record<string, unknown>;
+    const sid = String((obj.id as string | number | undefined) ?? '');
+    const title = typeof obj.title === 'string' ? obj.title : undefined;
+    const name = typeof obj.name === 'string' ? obj.name : undefined;
+    const slug = toSlug(String(name ?? title ?? `service-${idx + 1}`));
+    return sid === id || slug === id;
+  });
+
+  const service = matchIndex >= 0 ? (services[matchIndex] as Record<string, unknown>) : undefined;
+  const titleText = String(
+    (service?.title as string | undefined) ??
+      (service?.name as string | undefined) ??
+      (matchIndex >= 0 ? `Service ${matchIndex + 1}` : 'Service')
+  );
+
+  // Pull servicesDetails and match the corresponding detail item
+  const detailsList: Array<{ title?: string; content?: { description?: string; sections?: Array<{ title?: string; text?: string }>; faqs?: string[] } }>
+    = Array.isArray(landingPageData.content?.servicesDetails?.servicesDetails)
+      ? (landingPageData.content.servicesDetails.servicesDetails as Array<{ title?: string; content?: { description?: string; sections?: Array<{ title?: string; text?: string }>; faqs?: string[] } }>)
+      : [];
+
+  const currentSlug = toSlug(titleText || '');
+  const detailMatch = (() => {
+    // 1) Exact slug match or substring overlap
+    const exact = detailsList.find((d) => {
+      const ds = toSlug(String(d?.title || ''));
+      return ds === currentSlug || (ds && currentSlug && (ds.includes(currentSlug) || currentSlug.includes(ds)));
+    });
+    if (exact) return exact;
+    // 2) Fallback by index alignment
+    if (matchIndex >= 0 && matchIndex < detailsList.length) return detailsList[matchIndex];
+    return undefined;
+  })();
+
+  const faqs: string[] = Array.isArray(detailMatch?.content?.faqs)
+    ? (detailMatch!.content!.faqs!.filter((f): f is string => typeof f === 'string' && f.trim() !== ''))
+    : [];
+
+  // Transform string FAQs into question/answer pairs for this component's UI
+  type QA = { question: string; answer: string };
+  const parseFAQ = (s: string): QA => {
+    const qIdx = s.indexOf('?');
+    if (qIdx !== -1) {
+      const q = s.slice(0, qIdx + 1).trim();
+      const a = s.slice(qIdx + 1).trim();
+      return { question: q || 'Question', answer: a || s };
+    }
+    // No '?': use first sentence as question if possible
+    const periodIdx = s.indexOf('.');
+    if (periodIdx !== -1 && periodIdx < 120) {
+      const q = s.slice(0, periodIdx + 1).trim();
+      const a = s.slice(periodIdx + 1).trim();
+      return { question: q || 'Question', answer: a || s };
+    }
+    // Fallback: treat full as answer with a generic question
+    return { question: 'Frequently asked question', answer: s };
+  };
+
+  const questions: QA[] = faqs.map(parseFAQ);
+  const title = `${titleText} FAQs`;
+  const description = '';
   const themeData = landingPageData.themeData;
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -57,7 +133,7 @@ export default function FAQSection() {
             >
               <h2 
                 ref={titleRef}
-                className="text-[clamp(2.5rem,6vw,4rem)] font-light leading-[1] tracking-[-0.03em] text-[#1a1a1a] font-serif mb-4"
+                className="text-4xl md:text-5xl font-bold mb-4 text-gray-900"
               >
                 {title}
               </h2>
@@ -160,13 +236,11 @@ export default function FAQSection() {
               transitionDelay: '0.8s'
             }}
           >
-            <a
-              href="/contact-us"
-              className="inline-flex items-center gap-3 px-6 sm:px-8 py-3 rounded-full text-white font-medium shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-              style={{ background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})` }}
-            >
+            
+            <button 
+              className="px-8 py-3 font-medium text-white rounded-lg transition-all duration-300 hover:shadow-lg">
               Contact Us
-            </a>
+            </button>
           </div>
         </div>
       </div>

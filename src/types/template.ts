@@ -127,6 +127,27 @@ export interface ServiceHighlightsContent {
   }>;
 }
 
+// Services details extended content for deep service pages
+export interface ServiceDetailSection {
+  title: string;
+  text: string;
+}
+
+export interface ServiceDetailContent {
+  description: string;
+  sections: ServiceDetailSection[];
+  faqs: string[];
+}
+
+export interface ServiceDetailItem {
+  title: string;
+  content: ServiceDetailContent;
+}
+
+export interface ServicesDetailsContent {
+  servicesDetails: ServiceDetailItem[];
+}
+
 // CTA section content structure
 export interface CTAContent {
   heading: string;
@@ -149,6 +170,7 @@ export interface ContentData {
   contact?: ContactContent;
   serviceHighlights?: ServiceHighlightsContent;
   ctaSection?: CTAContent;
+  servicesDetails?: ServicesDetailsContent;
 }
 
 // SEO data structure (JSONB field)
