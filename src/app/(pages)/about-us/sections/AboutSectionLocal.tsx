@@ -7,13 +7,6 @@ import type { Image as TemplateImage } from "@/types/template";
 
 export default function AboutSectionLocal() {
   const landing = useLandingPageData();
-  const theme = landing?.themeData;
-  const about = (landing?.content?.about as {
-    title?: string;
-    description?: string;
-    features?: string[];
-    ctaButton?: { href: string; label: string };
-  }) || {};
   const images = useMemo(
     () => (landing?.images || []).filter((img: TemplateImage) => img.slotName.includes("about") || img.category === "about"),
     [landing]
