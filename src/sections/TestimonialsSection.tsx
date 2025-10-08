@@ -3,6 +3,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLandingPageData } from "@/components/LandingPageDataProvider";
 import useEmblaCarousel from "embla-carousel-react";
+import Link from "next/link";
+
+
 
 export default function TestimonialsSection() {
   const landing = useLandingPageData();
@@ -38,9 +41,12 @@ export default function TestimonialsSection() {
   }, [emblaApi]);
 
   // Embla renders all slides; current selection tracked via selectedIndex
+  const landingPageData = useLandingPageData();
+
+  const theme = landingPageData?.themeData;
 
   return (
-    <section id="testimonials" className="relative py-20 sm:py-24 md:py-28 overflow-hidden" style={{ background: backgroundGradient }}>
+    <section id="testimonials" className="relative py-20 flex flex-col items-center justify-center sm:py-24 md:py-28 overflow-hidden" style={{ background: backgroundGradient }}>
       {/* Use same animated background as Hero */}
       <div className="bg-animated-hero"></div>
       <div className="absolute inset-0 hero-overlay"></div>
@@ -167,6 +173,10 @@ export default function TestimonialsSection() {
           ))}
         </div>
       </div>
+
+      <Link href={'/reviews'} className="my-10 relative z-50 inline-flex items-center justify-center px-5 py-3 rounded-full text-white font-medium shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 focus:outline-none" style={{
+                  backgroundImage: `linear-gradient(90deg, ${theme?.primaryColor || '#7c4a35'}, ${theme?.secondaryColor || '#b07b62'})`,
+                }}>See All Reviews</Link>
       </section>
     );
   }

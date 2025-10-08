@@ -109,7 +109,7 @@ export default function BusinessOverviewSection() {
         }}
       ></div>
 
-      <div className="md:max-w-[70vw] w-full mx-auto px-4 sm:px-6 relative ">
+      <div className="w-full mx-auto px-4 sm:px-6 md:px-20 relative ">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
           {/* Left side - Business Overview Content */}
           <div ref={contentRef} className="space-y-16 col-span-2 ">
@@ -303,7 +303,7 @@ export default function BusinessOverviewSection() {
             {businessData && (
               <div
                 ref={contactRef}
-                className={`rounded-2xl py-8 px-4 text-white shadow-lg transition-all duration-1000 hover:shadow-2xl ${
+                className={`rounded-2xl p-8 text-white shadow-lg transition-all duration-1000 hover:shadow-2xl ${
                   contactVisible
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-8"
