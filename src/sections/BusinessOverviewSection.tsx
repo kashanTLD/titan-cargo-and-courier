@@ -110,9 +110,9 @@ export default function BusinessOverviewSection() {
       ></div>
 
       <div className="w-full mx-auto px-4 sm:px-6 md:px-20 relative ">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <div className="flex flex-col  lg:grid grid-cols-1 lg:grid-cols-5 gap-16 w-full">
           {/* Left side - Business Overview Content */}
-          <div ref={contentRef} className="space-y-16 col-span-2 ">
+          <div ref={contentRef} className="space-y-16 col-span-3 ">
             {content?.map((item, index) => (
               <div
                 key={index}
@@ -147,7 +147,7 @@ export default function BusinessOverviewSection() {
           </div>
 
           {/* Right side - Contact Form and Map */}
-          <div className="sticky top-5 self-start space-y-8">
+          <div className="lg:sticky lg:top-5 lg:self-start space-y-8 lg:col-span-2 w-full">
             {/* Map */}
             {contact?.showMap && businessData?.coordinates && (
               <div

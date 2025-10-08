@@ -1,0 +1,29 @@
+# Robots.txt for Titan Cargo and Courier
+# This file tells search engine crawlers which pages they can and cannot access
+
+# Allow all web crawlers to access all content
+User-agent: *
+Allow: /
+
+# Disallow access to private/admin areas (if any exist)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /private/
+
+# Allow access to important pages for SEO
+Allow: /services/
+Allow: /about/
+Allow: /contact/
+Allow: /reviews/
+
+# Disallow temporary or development files
+Disallow: /*.json$
+Disallow: /temp/
+Disallow: /test/
+
+# Crawl delay (optional - removes this if not needed)
+# Crawl-delay: 1
+
+# Sitemap location (update this URL to match your domain)
+Sitemap:https://titancargocourier.com/

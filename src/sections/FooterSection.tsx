@@ -75,7 +75,7 @@ export default function FooterSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-6 mb-12">
           
           {/* Company Info */}
           <div className="lg:col-span-2">
@@ -188,7 +188,7 @@ export default function FooterSection() {
                 <Link 
                   key={index}
                   href={link.href}
-                  className="block transition-colors duration-300 hover:translate-x-1"
+                  className="block w-fit transition-colors duration-300 hover:translate-x-1"
                   style={{ 
                     transitionDelay: `${index * 0.1}s`,
                     color: 'rgba(255, 255, 255, 0.7)'
